@@ -1,0 +1,23 @@
+# --- General ---
+.DS_Store
+*.log
+.idea/
+.vscode/
+
+# --- Android / Gradle ---
+android/.gradle/
+android/build/
+android/app/build/
+android/local.propertiese
+android/*.iml
+android/.externalNativeBuild
+android/.cxx/
+
+# --- Android API Keys & Firebase ---
+android/app/google-services.json
+
+# --- Backend ---
+backend/target/
+backend/build/
+backend/node_modules/
+backend/.env
