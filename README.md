@@ -43,6 +43,36 @@ Aplikacja składa się z dwóch głównych modułów: **modułu dla obywatela** 
 
 ---
 
+## 🚀 Uruchomienie projektu
+
+### Wymagania wstępne
+- Android Studio (najnowsza stabilna) + JDK 17+
+- Node.js 20+ / npm  **albo**  JDK 17+ + Maven (zależnie od wyboru backendu — do ustalenia w #2)
+- PostgreSQL 15+ z rozszerzeniem PostGIS
+- Konto Firebase (do FCM) — plik `google-services.json`
+
+### Backend
+```bash
+cd backend
+npm install
+cp .env.example .env   # uzupełnij zmienne środowiskowe (baza danych, FCM)
+npm run start:dev
+```
+*(jeśli finalnie Spring Boot: `./mvnw spring-boot:run`)*
+
+### Baza danych
+```bash
+createdb crisis_management
+psql -d crisis_management -c "CREATE EXTENSION postgis;"
+```
+
+### Aplikacja Android
+1. Otwórz katalog `android/` w Android Studio.
+2. Dodaj `google-services.json` do `android/app/`.
+3. Zsynchronizuj Gradle i uruchom na emulatorze/urządzeniu.
+
+---
+
 ## 📂 Struktura Repozytorium
 
 ```text
