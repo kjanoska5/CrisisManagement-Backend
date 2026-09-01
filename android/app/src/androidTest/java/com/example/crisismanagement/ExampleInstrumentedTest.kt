@@ -1,4 +1,4 @@
-package com.example.crisismanagementapp
+package com.example.crisismanagement
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

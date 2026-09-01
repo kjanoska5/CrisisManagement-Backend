@@ -1,4 +1,4 @@
-package com.example.crisismanagementapp
+package com.example.crisismanagement
 
 import org.junit.Test
 
