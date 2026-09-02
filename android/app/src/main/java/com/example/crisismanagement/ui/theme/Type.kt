@@ -1,4 +1,4 @@
-package com.example.crisismanagementapp.ui.theme
+package com.example.crisismanagement.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
