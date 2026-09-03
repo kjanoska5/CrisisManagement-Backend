@@ -1,4 +1,4 @@
-# 🚨 Mobilny System Teleinformatyczny do Zarządzania Kryzysowego
+# Mobilny System Teleinformatyczny do Zarządzania Kryzysowego
 
 > **Praca Inżynierska**  
 > **Uczelnia:** Politechnika Łódzka  
@@ -7,7 +7,7 @@
 
 ---
 
-## 📌 O projekcie
+## O projekcie
 
 System służy do natychmiastowego przekazywania informacji o zagrożeniach, koordynacji działań w sytuacjach kryzysowych oraz sprawny przepływ informacji pomiędzy obywatelami a służbami ratunkowymi.
 
@@ -15,9 +15,9 @@ Aplikacja składa się z dwóch głównych modułów: **modułu dla obywatela** 
 
 ---
 
-## 🔥 Kluczowe Funkcjonalności
+## Kluczowe Funkcjonalności
 
-### 📱 Moduł Obywatela (Android App)
+### Moduł Obywatela (Android App)
 * **Szybkie wezwanie pomocy (SOS):** Przytrzymanie przycisku wysyła pakiet danych z dokładną pozycją GPS oraz zapisaną kartą medyczną.
 * **Zgłaszanie zdarzeń:** Dodawanie zgłoszeń ze zdjęciem, lokalizacją GPS, kategorią oraz opisem.
 * **Interactive Hazard Map:** Interaktywna mapa z oznaczonymi statusami zagrożeń (aktywne, weryfikowane, rozwiązane).
@@ -27,14 +27,14 @@ Aplikacja składa się z dwóch głównych modułów: **modułu dla obywatela** 
 * **Karta Medyczna & Poradniki:** Dostęp offline do instrukcji pierwszej pomocy oraz profili medycznych użytkownika.
 * **Tryb oszczędzania zasobów:** Możliwość przesyłania wyłącznie priorytetowych danych (tekst + GPS) w celu oszczędzania baterii i transferu.
 
-### 🛡️ Moduł dla Służb & Algorytmy Serwerowe
+### Moduł dla Służb & Algorytmy Serwerowe
 * **System wiarygodności zgłoszeń:** Algorytm analizujący powtarzalność zgłoszeń (np. 5 zgłoszeń w promieniu 100m) i podnoszący priorytet zdarzenia.
 * **Nanoszenie i weryfikacja zagrożeń:** Zarządzanie statusami zdarzeń i obszarami objętymi niebezpieczeństwem.
 * **Śledzenie jednostek ratunkowych:** Podgląd na mapie pozycji służb znajdujących się w pobliżu użytkownika.
 
 ---
 
-## 🛠️ Stos Technologiczny
+## Stos Technologiczny
 
 * **Aplikacja Mobilna:** Android Studio, Kotlin, Jetpack Compose, Room DB, Mapbox / Google Maps SDK
 * **Backend:** Node.js (NestJS/Express) / Java (Spring Boot)
@@ -43,7 +43,7 @@ Aplikacja składa się z dwóch głównych modułów: **modułu dla obywatela** 
 
 ---
 
-## 🚀 Uruchomienie projektu
+## Uruchomienie projektu
 
 ### Wymagania wstępne
 - Android Studio (najnowsza stabilna) + JDK 17+
@@ -73,7 +73,7 @@ psql -d crisis_management -c "CREATE EXTENSION postgis;"
 
 ---
 
-## 📂 Struktura Repozytorium
+## Struktura Repozytorium
 
 ```text
 crisis-management-system/
