@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    container_name: crisis-management-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: crisis_management
+      POSTGRES_USER: crisis_management
+      POSTGRES_PASSWORD: crisis_management_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:
