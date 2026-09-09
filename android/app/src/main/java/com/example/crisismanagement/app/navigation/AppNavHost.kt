@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.crisismanagement.app.enums.Rola
 import com.example.crisismanagement.app.login.LoginScreen
 import com.example.crisismanagement.app.obywatel.ui.ObywatelHomeScreen
+import com.example.crisismanagement.app.obywatel.zgloszenie.ZgloszenieScreen
 import com.example.crisismanagement.app.sluzby.ui.SluzbyHomeScreen
 
 /**
@@ -37,7 +38,15 @@ fun AppNavHost(
         }
 
         composable(Route.ObywatelHome.route) {
-            ObywatelHomeScreen()
+            ObywatelHomeScreen(navController)
+        }
+
+        composable(Route.ZgloszenieForm.route) {
+            ZgloszenieScreen(
+                // TODO: docelowo prawdziwe ID zalogowanego użytkownika (patrz issue o autoryzacji)
+                uzytkownikId = "f93862e6-9b5f-4ba9-9664-d6a306370c66",
+                onZgloszeniaWyslano = { navController.popBackStack() }
+            )
         }
 
         composable(Route.SluzbyHome.route) {
