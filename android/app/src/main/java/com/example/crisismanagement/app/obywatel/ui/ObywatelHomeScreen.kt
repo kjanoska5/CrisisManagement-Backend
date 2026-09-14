@@ -2,19 +2,29 @@ package com.example.crisismanagement.app.obywatel.ui
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.crisismanagement.app.common.components.MapaWidok
+import com.example.crisismanagement.app.navigation.Route
 
-/**
- * Ekran startowy modułu obywatela.
- * Na razie tylko szkielet z mapą — konkretne funkcje (zgłaszanie, SOS itd.)
- * dochodzą w kolejnych issues (1.1, 6.1, ...).
- */
 @Composable
-fun ObywatelHomeScreen() {
+fun ObywatelHomeScreen(navController: NavHostController) {
     Box(modifier = Modifier.fillMaxSize()) {
         MapaWidok()
-        // TODO: przycisk SOS (issue 6.1), przycisk zgłoszenia (issue 1.1)
+        FloatingActionButton(
+            onClick = { navController.navigate(Route.ZgloszenieForm.route) },
+            modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp)
+        ) {
+            Icon(Icons.Default.Warning, contentDescription = "Zgłoś zdarzenie")
+        }
+        // TODO: przycisk SOS (issue 6.1)
     }
 }
