@@ -36,8 +36,8 @@ Aplikacja składa się z dwóch głównych modułów: **modułu dla obywatela** 
 
 ## Stos Technologiczny
 
-* **Aplikacja Mobilna:** Android Studio, Kotlin, Jetpack Compose, Room DB, Mapbox / Google Maps SDK
-* **Backend:** Node.js (NestJS/Express) / Java (Spring Boot)
+* **Aplikacja Mobilna:** Android Studio, Kotlin, Jetpack Compose, Room DB, Google Maps SDK
+* **Backend:** Java (Spring Boot)
 * **Baza Danych:** PostgreSQL + PostGIS (obliczenia geoprzestrzenne)
 * **Powiadomienia & Real-time:** Firebase Cloud Messaging (FCM), WebSockets
 
