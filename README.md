@@ -47,7 +47,7 @@ Aplikacja składa się z dwóch głównych modułów: **modułu dla obywatela** 
 
 ### Wymagania wstępne
 - Android Studio (najnowsza stabilna) + JDK 17+
-- Node.js 20+ / npm  **albo**  JDK 17+ + Maven (zależnie od wyboru backendu — do ustalenia w #2)
+- JDK 17+ + Maven (zależnie od wyboru backendu — do ustalenia w #2)
 - PostgreSQL 15+ z rozszerzeniem PostGIS
 - Konto Firebase (do FCM) — plik `google-services.json`
 
