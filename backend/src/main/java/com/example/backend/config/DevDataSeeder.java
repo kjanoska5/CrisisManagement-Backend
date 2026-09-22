@@ -1,60 +1,55 @@
 package com.example.backend.config;
 
-import com.example.backend.model.Rola;
-import com.example.backend.model.TypZagrozenia;
-import com.example.backend.model.Uzytkownik;
-import com.example.backend.repository.TypZagrozeniaRepository;
-import com.example.backend.repository.UzytkownikRepository;
+import com.example.backend.model.Role;
+import com.example.backend.model.ThreatType;
+import com.example.backend.model.User;
+import com.example.backend.repository.ThreatTypeRepository;
+import com.example.backend.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 
-/**
- * Dane testowe wstawiane automatycznie przy starcie aplikacji,
- * TYLKO jeśli tabele są puste — potrzebne do developmentu, dopóki
- * nie ma prawdziwej rejestracji użytkowników.
- *
- * Po starcie backendu sprawdzić w bazie (albo w logach) wygenerowane
- * UUID testowego użytkownika i typów zagrożeń — będą potrzebne
- * do przetestowania POST /api/zgloszenia przez Postman/curl.
- */
+// dane testowe ladowane przy starcie aplikacji
 @Configuration
 public class DevDataSeeder {
 
     @Bean
-    CommandLineRunner zaladujDaneTestowe(
-            UzytkownikRepository uzytkownikRepository,
-            TypZagrozeniaRepository typZagrozeniaRepository
+    CommandLineRunner loadTestData(
+            UserRepository userRepository,
+            ThreatTypeRepository threatTypeRepository
     ) {
         return args -> {
-            if (uzytkownikRepository.count() == 0) {
-                Uzytkownik testowy = new Uzytkownik();
-                testowy.setEmail("test.obywatel@example.com");
-                testowy.setHasloHash("stub");
-                testowy.setRola(Rola.OBYWATEL);
-                testowy.setImie("Jan");
-                testowy.setNazwisko("Testowy");
-                uzytkownikRepository.save(testowy);
-                System.out.println("[DevDataSeeder] Utworzono testowego użytkownika: " + testowy.getId());
+            // tworzenie uzytkownika jesli baza pusta
+            if (userRepository.count() == 0) {
+                User testUser = new User();
+                testUser.setEmail("test.citizen@example.com");
+                testUser.setPasswordHash("stub");
+                testUser.setRole(Role.CITIZEN);
+                testUser.setFirstName("john");
+                testUser.setLastName("doe");
+                userRepository.save(testUser);
+                System.out.println("test user created: " + testUser.getId());
             }
 
-            if (typZagrozeniaRepository.count() == 0) {
-                List<TypZagrozenia> typy = typZagrozeniaRepository.saveAll(List.of(
-                        nowyTyp("Pożar"),
-                        nowyTyp("Powódź"),
-                        nowyTyp("Wypadek drogowy"),
-                        nowyTyp("Awaria infrastruktury")
+            // tworzenie typow zagrozien
+            if (threatTypeRepository.count() == 0) {
+                List<ThreatType> types = threatTypeRepository.saveAll(List.of(
+                        newType("fire"),
+                        newType("flood"),
+                        newType("traffic accident"),
+                        newType("infrastructure failure")
                 ));
-                typy.forEach(t -> System.out.println("[DevDataSeeder] Typ zagrożenia: " + t.getNazwa() + " -> " + t.getId()));
+                types.forEach(t -> System.out.println("threat type: " + t.getName() + " -> " + t.getId()));
             }
         };
     }
 
-    private TypZagrozenia nowyTyp(String nazwa) {
-        TypZagrozenia typ = new TypZagrozenia();
-        typ.setNazwa(nazwa);
-        return typ;
+    // pomocnicza metoda do tworzenia typu
+    private ThreatType newType(String name) {
+        ThreatType type = new ThreatType();
+        type.setName(name);
+        return type;
     }
 }

@@ -1,6 +1,6 @@
 package com.example.backend.model;
 
-public enum ZrodloZgloszenia {
+public enum ReportSource {
     ONLINE,
     OFFLINE_SYNC
 }
