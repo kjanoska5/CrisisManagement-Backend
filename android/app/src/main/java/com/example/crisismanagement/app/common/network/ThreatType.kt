@@ -1,7 +1,7 @@
 package com.example.crisismanagement.app.common.network
 
-data class TypZagrozenia(
+data class ThreatType(
     val id: String,
-    val nazwa: String,
-    val ikona: String?
+    val name: String,
+    val icon: String?
 )

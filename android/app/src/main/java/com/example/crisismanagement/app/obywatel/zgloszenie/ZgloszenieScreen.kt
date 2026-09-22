@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -98,7 +97,7 @@ fun ZgloszenieScreen(
             onExpandedChange = { rozwinietyDropdown = it}
         ) {
             OutlinedTextField(
-                value = stan.wybranaKategoria?.nazwa?: "Wybierz kategorię",
+                value = stan.wybranaKategoria?.name?: "Wybierz kategorię",
                 onValueChange = {},
                 readOnly = true,
                 label = {Text("Kategoria zagrożenia")},
@@ -110,7 +109,7 @@ fun ZgloszenieScreen(
             ) {
                 stan.listaKategorii.forEach { typ->
                     DropdownMenuItem(
-                        text = {Text(typ.nazwa)},
+                        text = {Text(typ.name)},
                         onClick = {
                             viewModel.wybierzTyp(typ)
                             rozwinietyDropdown = false

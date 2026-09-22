@@ -2,17 +2,17 @@ package com.example.crisismanagement.app.obywatel.zgloszenie
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.crisismanagement.app.common.network.NoweZgloszenieRequest
+import com.example.crisismanagement.app.common.network.NewReportRequest
 import com.example.crisismanagement.app.common.network.RetrofitClient
-import com.example.crisismanagement.app.common.network.TypZagrozenia
+import com.example.crisismanagement.app.common.network.ThreatType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 data class ZgloszenieUiState(
-    val listaKategorii : List<TypZagrozenia> = emptyList(),
-    val wybranaKategoria : TypZagrozenia? = null,
+    val listaKategorii : List<ThreatType> = emptyList(),
+    val wybranaKategoria : ThreatType? = null,
     val komentarz : String = "",
     val zdjeciaUri : String? = null,
     val szerokoscGeo : Double? = null,
@@ -41,7 +41,7 @@ class ZgloszenieViewModel : ViewModel() {
         pobierzTypyZagrozen()
     }
 
-    fun wybierzTyp(typ: TypZagrozenia){
+    fun wybierzTyp(typ: ThreatType){
         _uiState.value = _uiState.value.copy(wybranaKategoria = typ)
     }
 
@@ -71,13 +71,13 @@ class ZgloszenieViewModel : ViewModel() {
             _uiState.value = stan.copy(wysylanie = true, komunikatBledu = null)
         try {
             RetrofitClient.api.wyslijZgloszenie(
-                NoweZgloszenieRequest(
-                    uzytkownikId = uzytkownikId,
-                    typZagrozeniaId = typ.id,
+                NewReportRequest(
+                    userId = uzytkownikId,
+                    threatTypeId = typ.id,
                     lat = lat,
                     lng = lng,
-                    zdjecieUrl = null,
-                    komentarz = stan.komentarz.ifBlank { null }
+                    photoUrl = null,
+                    comment = stan.komentarz.ifBlank { null }
                 )
             )
             _uiState.value = _uiState.value.copy(wysylanie = false, wyslano = true)
