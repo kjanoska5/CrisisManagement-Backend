@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5433/crisis_management
+    url: jdbc:postgresql://localhost:${DB_PORT:5432}/crisis_management
     username: crisis_management
     password: crisis_management_dev
   jpa:
