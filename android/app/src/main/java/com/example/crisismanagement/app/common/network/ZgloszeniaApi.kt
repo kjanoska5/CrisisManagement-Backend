@@ -6,6 +6,7 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.DELETE
 
 
 interface ZgloszeniaApi {
@@ -20,6 +21,10 @@ interface ZgloszeniaApi {
     // pobieranie karty medycznej
     @GET("api/users/{userId}/medical-card")
     suspend fun getMedicalCard(@Path("userId") userId: String): Response<MedicalCardResponse>
+
+    // usuwanie karty medycznej
+    @DELETE("api/users/{userId}/medical-card")
+    suspend fun deleteMedicalCard(@Path("userId") userId: String): Response<Unit>
 
     // aktualizacja karty medycznej
     @PUT("api/users/{userId}/medical-card")
