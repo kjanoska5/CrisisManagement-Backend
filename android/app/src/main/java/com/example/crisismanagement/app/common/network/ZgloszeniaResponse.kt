@@ -1,6 +1,6 @@
 package com.example.crisismanagement.app.common.network
 
-data class ZgloszenieResponse(
+data class ReportResponse(
     val id: String,
-    val dataUtworzenia: String
+    val createdAt: String
 )

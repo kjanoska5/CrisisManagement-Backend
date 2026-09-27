@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.example.crisismanagement.app.navigation.AppNavHost
+import com.example.crisismanagement.app.common.navigation.AppNavHost
 import com.example.crisismanagement.ui.theme.CrisisManagementAppTheme
 
 class MainActivity : ComponentActivity() {

@@ -6,9 +6,10 @@ import com.example.backend.model.MedicalCard;
 import com.example.backend.model.User;
 import com.example.backend.repository.UserRepository;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
+import com.example.backend.repository.MedicalCardRepository;
 import java.util.UUID;
 
 // endpointy dla karty medycznej
@@ -17,9 +18,11 @@ import java.util.UUID;
 public class MedicalCardController {
 
     private final UserRepository userRepository;
+    private final MedicalCardRepository medicalCardRepository;
 
-    public MedicalCardController(UserRepository userRepository) {
+    public MedicalCardController(UserRepository userRepository, MedicalCardRepository medicalCardRepository) {
         this.userRepository = userRepository;
+        this.medicalCardRepository=medicalCardRepository;
     }
 
     // pobieranie karty
@@ -56,11 +59,27 @@ public class MedicalCardController {
         card.setMedications(request.getMedications());
 
         user.setMedicalCard(card);
-        // zapis do bazy dzieki cascade
         userRepository.save(user);
 
         return mapToResponse(card);
     }
+    @DeleteMapping
+    public ResponseEntity<Void> deleteCard(@PathVariable UUID userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "user not found"));
+
+        MedicalCard card = user.getMedicalCard();
+        if (card == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "medical card not found");
+        }
+
+        user.setMedicalCard(null);
+        userRepository.save(user);
+        medicalCardRepository.delete(card);
+
+        return ResponseEntity.noContent().build();
+    }
+
 
     // przepisywanie danych z encji do dto
     private MedicalCardResponse mapToResponse(MedicalCard card) {
