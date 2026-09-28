@@ -1,5 +1,6 @@
 package com.example.backend.model;
 
+import com.example.backend.converter.CryptoConverter;
 import jakarta.persistence.*;
 
 // encja karty medycznej
@@ -12,17 +13,23 @@ public class MedicalCard {
     private Long id;
 
     @Column(name = "blood_type")
+    @Convert(converter = CryptoConverter.class)
     private String bloodType;
 
+    @Column(name = "allergies")
+    @Convert(converter = CryptoConverter.class)
     private String allergies;
 
     @Column(name = "chronic_diseases")
+    @Convert(converter = CryptoConverter.class)
     private String chronicDiseases;
 
     @Column(name = "medications")
+    @Convert(converter = CryptoConverter.class)
     private String medications;
 
     @Column(name = "emergency_contact")
+    @Convert(converter = CryptoConverter.class)
     private String emergencyContact;
 
     @OneToOne(mappedBy = "medicalCard")
