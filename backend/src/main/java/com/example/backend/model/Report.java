@@ -6,6 +6,9 @@ import org.locationtech.jts.geom.Point;
 import java.time.Instant;
 import java.util.UUID;
 
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+
 // encja reprezentujaca zgloszenie w bazie
 @Entity
 @Table(name = "reports")
@@ -39,7 +42,11 @@ public class Report {
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt = Instant.now();
 
+    @Enumerated(EnumType.STRING)
+    private ReportStatus status = ReportStatus.ACTIVE;
+
     public UUID getId() { return id; }
+
     public void setId(UUID id) { this.id = id; }
 
     public User getUser() { return user; }
@@ -62,4 +69,12 @@ public class Report {
 
     public Instant getCreatedAt() { return createdAt; }
     public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }
+
+    public ReportStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ReportStatus status) {
+        this.status = status;
+    }
 }
