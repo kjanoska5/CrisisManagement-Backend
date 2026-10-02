@@ -32,4 +32,8 @@ interface ZgloszeniaApi {
         @Path("userId") userId: String,
         @Body request: MedicalCardRequest
     ): Response<MedicalCardResponse>
+
+    // pobieranie listy wszystkich zgłoszeń na mapę
+    @GET("api/reports")
+    suspend fun getReports(): List<ReportSummary>
 }
