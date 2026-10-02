@@ -89,4 +89,3 @@ fun MapaWidok(
         )
     }
 }
-    // TODO: pinezki zdarzeń dojdą w issue 4.1, oznaczanie w issue 3.1
