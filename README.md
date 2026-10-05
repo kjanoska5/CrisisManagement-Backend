@@ -1,82 +1,110 @@
-# Mobilny System Teleinformatyczny do Zarządzania Kryzysowego
+##  Mobilny System Teleinformatyczny do Zarządzania Kryzysowego
 
-> **Praca Inżynierska**  
-> **Uczelnia:** Politechnika Łódzka  
-> **Promotor:** dr inż. Paweł Marciniak  
-> **Autorzy:** Kacper & Marcel  
+> **Praca Inżynierska**
+> **Uczelnia:** Politechnika Łódzka
+> **Promotor:** dr inż. Paweł Marciniak
+> **Autorzy:** Kacper Janoska (backend / serwer) & Marcel Podlecki (aplikacja mobilna / klient)
 
 ---
 
-## O projekcie
+##  O projekcie
 
 System służy do natychmiastowego przekazywania informacji o zagrożeniach, koordynacji działań w sytuacjach kryzysowych oraz sprawny przepływ informacji pomiędzy obywatelami a służbami ratunkowymi.
 
-Aplikacja składa się z dwóch głównych modułów: **modułu dla obywatela** (aplikacja mobilna Android) oraz **modułu dla służb** (panel zarządzania).
+Aplikacja składa się z dwóch głównych modułów: **modułu dla obywatela** oraz **modułu dla służb** — oba zrealizowane w ramach jednej natywnej aplikacji Android, rozróżniane rolą użytkownika (uzasadnienie wyboru: [ADR-0001](docs/adr/0001-wybor-stosu-technologicznego.md)).
+
+Aktualny, bieżący postęp prac śledzony jest na bieżąco w zakładkach **Issues** i **Milestones** tego repozytorium.
 
 ---
 
-## Kluczowe Funkcjonalności
+##  Funkcjonalności
 
-### Moduł Obywatela (Android App)
-* **Szybkie wezwanie pomocy (SOS):** Przytrzymanie przycisku wysyła pakiet danych z dokładną pozycją GPS oraz zapisaną kartą medyczną.
-* **Zgłaszanie zdarzeń:** Dodawanie zgłoszeń ze zdjęciem, lokalizacją GPS, kategorią oraz opisem.
-* **Interactive Hazard Map:** Interaktywna mapa z oznaczonymi statusami zagrożeń (aktywne, weryfikowane, rozwiązane).
-* **Alerty kryzysowe:** Powiadomienia PUSH wybudzające telefon ze sygnałem dźwiękowym i pop-upem w nagłych sytuacjach.
-* **Nawigacja do punktu zbiórki:** Wyznaczanie najkrótszej trasy do bezpiecznej strefy ewakuacyjnej.
-* **Tryb Offline:** Automatyczny zapis zgłoszeń w lokalnej bazie danych w przypadku braku zasięgu i ich synchronizacja po powrocie do sieci.
-* **Karta Medyczna & Poradniki:** Dostęp offline do instrukcji pierwszej pomocy oraz profili medycznych użytkownika.
-* **Tryb oszczędzania zasobów:** Możliwość przesyłania wyłącznie priorytetowych danych (tekst + GPS) w celu oszczędzania baterii i transferu.
+###  Moduł Obywatela (Android App)
+**Zrealizowane:**
+-  **Zgłaszanie zdarzeń:** zdjęcie, automatycznie pobrana lokalizacja GPS, wybór kategorii zagrożenia z listy, opcjonalny komentarz
+-  **Interaktywna mapa zagrożeń:** pinezki kolorowane wg statusu (czerwony — aktywne, żółty — weryfikowane, zielony — rozwiązane), szczegóły zgłoszenia po kliknięciu, automatyczne odświeżanie w czasie zbliżonym do rzeczywistego
+-  **Karta medyczna:** utworzenie, edycja i usunięcie profilu zdrowotnego (grupa krwi, alergie, przyjmowane leki, choroby przewlekłe, kontakt alarmowy); dane wrażliwe szyfrowane po stronie backendu
 
-### Moduł dla Służb & Algorytmy Serwerowe
-* **System wiarygodności zgłoszeń:** Algorytm analizujący powtarzalność zgłoszeń (np. 5 zgłoszeń w promieniu 100m) i podnoszący priorytet zdarzenia.
-* **Nanoszenie i weryfikacja zagrożeń:** Zarządzanie statusami zdarzeń i obszarami objętymi niebezpieczeństwem.
-* **Śledzenie jednostek ratunkowych:** Podgląd na mapie pozycji służb znajdujących się w pobliżu użytkownika.
+**Planowane:**
+-  **Szybkie wezwanie pomocy (SOS):** przytrzymanie przycisku wysyła lokalizację GPS wraz z zapisaną kartą medyczną
+-  **Alerty kryzysowe:** powiadomienia push wybudzające telefon, z sygnałem dźwiękowym i pop-upem
+-  **Nawigacja do punktu zbiórki:** najkrótsza trasa do bezpiecznej strefy ewakuacyjnej po alercie
+-  **Tryb offline:** lokalny zapis zgłoszeń przy braku zasięgu i automatyczna synchronizacja po odzyskaniu połączenia
+-  **Poradniki offline:** instrukcje pierwszej pomocy i postępowania w sytuacjach kryzysowych, dostępne bez internetu
+-  **Tryb oszczędzania zasobów:** przesyłanie wyłącznie priorytetowych danych (tekst + GPS) bez zdjęć
+
+###  Moduł dla Służb & Algorytmy Serwerowe
+**Zrealizowane:**
+-  **Mapa zagrożeń** — ten sam, współdzielony komponent co w module obywatela
+**Planowane:**
+-  **Nanoszenie i weryfikacja zagrożeń:** zarządzanie statusem zgłoszenia (endpoint na backendzie już gotowy, interfejs w aplikacji w trakcie realizacji)
+-  **System wiarygodności zgłoszeń:** automatyczne podnoszenie priorytetu przy wielu niezależnych zgłoszeniach tego samego zdarzenia w niewielkim promieniu
+-  **Śledzenie jednostek ratunkowych:** pozycje służb widoczne na mapie obywatela
+
+> Logowanie obecnie rozróżnia jedynie rolę (obywatel / służby) jako mechanizm tymczasowy — pełna autoryzacja użytkowników jest zaplanowana jako osobny etap prac.
 
 ---
 
-## Stos Technologiczny
+##  Stos Technologiczny
 
-* **Aplikacja Mobilna:** Android Studio, Kotlin, Jetpack Compose, Room DB, Google Maps SDK
-* **Backend:** Java (Spring Boot)
-* **Baza Danych:** PostgreSQL + PostGIS (obliczenia geoprzestrzenne)
-* **Powiadomienia & Real-time:** Firebase Cloud Messaging (FCM), WebSockets
+**Zrealizowane:**
+- **Aplikacja Mobilna:** Kotlin, Jetpack Compose, Google Maps SDK, Retrofit
+- **Backend:** Java, Spring Boot, Maven
+- **Baza Danych:** PostgreSQL + PostGIS (obliczenia geoprzestrzenne), uruchamiana przez Docker
+- **Bezpieczeństwo:** AES/GCM — szyfrowanie pól wrażliwych karty medycznej na poziomie bazy danych
+
+**Planowane:**
+- **Powiadomienia:** Firebase Cloud Messaging (FCM)
+- **Dane offline:** lokalna baza Room po stronie aplikacji Android
+
+Pełne uzasadnienie wyboru technologii: [docs/adr/0001-wybor-stosu-technologicznego.md](docs/adr/0001-wybor-stosu-technologicznego.md)
 
 ---
 
-## Uruchomienie projektu
+##  Uruchomienie projektu
 
 ### Wymagania wstępne
-- Android Studio (najnowsza stabilna) + JDK 17+
-- JDK 17+ + Maven (zależnie od wyboru backendu — do ustalenia w #2)
-- PostgreSQL 15+ z rozszerzeniem PostGIS
-- Konto Firebase (do FCM) — plik `google-services.json`
+- Docker Desktop
+- JDK 17+
+- Android Studio (najnowsza stabilna wersja) + Android SDK
+- Klucz API do Google Maps SDK for Android (Google Cloud Console)
 
-### Backend
+### 1. Baza danych
+W głównym katalogu repozytorium:
+```bash
+docker compose up -d
+```
+Uruchamia PostgreSQL z rozszerzeniem PostGIS na porcie `5432` (konfiguracja: `docker-compose.yml`). W razie konfliktu portu na danym komputerze, port można nadpisać lokalnie zmienną środowiskową `DB_PORT`, bez modyfikowania pliku współdzielonego w repozytorium.
+
+### 2. Backend
 ```bash
 cd backend
-npm install
-cp .env.example .env   # uzupełnij zmienne środowiskowe (baza danych, FCM)
-npm run start:dev
+./mvnw spring-boot:run
 ```
-*(jeśli finalnie Spring Boot: `./mvnw spring-boot:run`)*
+Backend startuje na porcie `8080` i łączy się z bazą z kroku 1. Przy pierwszym uruchomieniu automatycznie wstawiane są dane testowe (przykładowy użytkownik i kategorie zagrożeń).
 
-### Baza danych
-```bash
-createdb crisis_management
-psql -d crisis_management -c "CREATE EXTENSION postgis;"
-```
+Zmienna środowiskowa `ENCRYPTION_KEY` (szyfrowanie karty medycznej) ma ustawioną bezpieczną wartość domyślną wyłącznie do developmentu (`application.yml`) — do nadpisania na docelowym środowisku.
 
-### Aplikacja Android
+### 3. Aplikacja Android
 1. Otwórz katalog `android/` w Android Studio.
-2. Dodaj `google-services.json` do `android/app/`.
-3. Zsynchronizuj Gradle i uruchom na emulatorze/urządzeniu.
+2. W pliku `android/local.properties` dodaj:
+   ```
+   MAPS_API_KEY=twój_klucz_api
+   ```
+3. Zsynchronizuj Gradle i uruchom na emulatorze lub urządzeniu fizycznym.
+
+> Backend (krok 2) musi działać lokalnie, żeby aplikacja mogła się z nim komunikować. Na emulatorze Androida adres `10.0.2.2` wskazuje na `localhost` komputera-hosta — to oczekiwane zachowanie, nie błąd konfiguracji.
 
 ---
 
-## Struktura Repozytorium
-
+##  Struktura Repozytorium
 ```text
 crisis-management-system/
-├── android/            # Kod źródłowy aplikacji mobilnej (Android Studio / Kotlin)
-├── backend/            # Kod źródłowy serwera i API
-└── docs/               # Dokumentacja projektowa i schematy bazy danych
+├── android/                 # Kod źródłowy aplikacji mobilnej (Kotlin, Jetpack Compose)
+├── backend/                 # Kod źródłowy serwera i API (Spring Boot)
+├── docs/                    # Dokumentacja projektowa
+│   ├── adr/                  # Decyzje architektoniczne (Architecture Decision Records)
+│   ├── architecture.md       # Diagram komponentów i kluczowych przepływów danych
+│   └── database-schema.md    # Schemat bazy danych (ERD)
+└── docker-compose.yml       # Konfiguracja lokalnej bazy danych
+```
