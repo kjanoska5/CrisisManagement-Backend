@@ -10,17 +10,30 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.crisismanagement.app.common.components.MapaWidok
+import com.example.crisismanagement.app.common.components.MapaZagrozenViewModel
 import com.example.crisismanagement.app.navigation.Route
 
 @Composable
-fun ObywatelHomeScreen(navController: NavHostController) {
+fun ObywatelHomeScreen(
+    navController: NavHostController,
+    mapaZagrozenViewModel: MapaZagrozenViewModel = viewModel()) {
+    val mapState by mapaZagrozenViewModel.uiState.collectAsState()
     Box(modifier = Modifier.fillMaxSize()) {
-        MapaWidok()
+        MapaWidok(
+            reports = mapState.reports,
+            chosenReport = mapState.chosenReports,
+            categories = mapState.categories,
+            onReportClick = {mapaZagrozenViewModel.chooseReport(it)},
+            onDismissDialog = {mapaZagrozenViewModel.chooseReport(null)}
+        )
 
         SmallFloatingActionButton(
             onClick = { navController.navigate(Route.MedicalCard.route) },
