@@ -43,7 +43,7 @@ public class Report {
     private Instant createdAt = Instant.now();
 
     @Enumerated(EnumType.STRING)
-    private ReportStatus status = ReportStatus.ACTIVE;
+    private ReportStatus status = ReportStatus.VERIFYING;
 
     public UUID getId() { return id; }
 
