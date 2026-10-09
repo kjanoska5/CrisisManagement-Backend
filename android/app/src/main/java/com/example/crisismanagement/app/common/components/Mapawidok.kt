@@ -17,6 +17,7 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
+import androidx.compose.runtime.key
 
 /**
  * Współdzielony komponent mapy (Google Maps SDK, zgodnie z ADR-0001).
@@ -42,24 +43,32 @@ fun MapaWidok(
     GoogleMap(
         modifier = modifier.fillMaxSize(),
         cameraPositionState = cameraPositionState
-    ){
+    ) {
         reports.forEach { report ->
-            val markerIcon = when (report.status) {
-                ReportStatus.VERIFYING -> BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)
-                ReportStatus.RESOLVED -> BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)
-                else -> BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)
-            }
-            Marker(
-                state = rememberMarkerState(
-                    key = report.id,
-                    position = LatLng(report.lat, report.lng)
-                ),
-                icon = markerIcon,
-                onClick = {
-                    onReportClick(report)
-                    true
+            key(report.id) {
+                val markerIcon = when (report.status) {
+                    ReportStatus.VERIFYING -> BitmapDescriptorFactory.defaultMarker(
+                        BitmapDescriptorFactory.HUE_YELLOW
+                    )
+
+                    ReportStatus.RESOLVED -> BitmapDescriptorFactory.defaultMarker(
+                        BitmapDescriptorFactory.HUE_GREEN
+                    )
+
+                    else -> BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)
                 }
-            )
+                Marker(
+                    state = rememberMarkerState(
+                        key = report.id,
+                        position = LatLng(report.lat, report.lng)
+                    ),
+                    icon = markerIcon,
+                    onClick = {
+                        onReportClick(report)
+                        true
+                    }
+                )
+            }
         }
     }
     if (chosenReport != null){
