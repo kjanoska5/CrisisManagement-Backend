@@ -20,6 +20,7 @@ Aktualny, bieżący postęp prac śledzony jest na bieżąco w zakładkach **Iss
 ##  Makieta
 
 https://www.figma.com/design/arjRIcCKMXEpYhwgz7Xjv1/Crisis-Management---Makieta?node-id=8-2&t=E7XJvaYB4f4fLV5l-1
+Ścieżka do makiety w repozytorium docs/
 
 ---
 
