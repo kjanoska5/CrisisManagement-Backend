@@ -24,6 +24,7 @@ public class DevDataSeeder {
             // tworzenie uzytkownika jesli baza pusta
             if (userRepository.count() == 0) {
                 User testUser = new User();
+                testUser.setId(java.util.UUID.fromString("a4bab6f2-60fa-461a-b7b5-746b0e883896"));
                 testUser.setEmail("test.citizen@example.com");
                 testUser.setPasswordHash("stub");
                 testUser.setRole(Role.CITIZEN);
