@@ -1,13 +1,14 @@
 import java.util.Properties
 import java.io.FileInputStream
 
-val localProperties = Properties().apply {
-    val file = rootProject.file("local.properties")
-    if (file.exists()) load(FileInputStream(file))
-}
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+}
+
+val localProperties = Properties().apply {
+    val file = rootProject.file("local.properties")
+    if (file.exists()) load(FileInputStream(file))
 }
 
 android {
@@ -29,7 +30,12 @@ android {
     }
 
     buildTypes {
+        debug {
+            val debugUrl = localProperties.getProperty("API_BASE_URL", "http://10.0.2.2:8080/")
+            buildConfigField("String", "BASE_URL", "\"$debugUrl\"")
+        }
         release {
+            buildConfigField("String", "BASE_URL", "\"http://9.205.17.123/\"")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -43,6 +49,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 

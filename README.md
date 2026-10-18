@@ -115,3 +115,23 @@ crisis-management-system/
 │   └── database-schema.md    # Schemat bazy danych (ERD)
 └── docker-compose.yml       # Konfiguracja lokalnej bazy danych
 ```
+
+## Przełączanie środowiska (Android)
+
+Adres API jest konfigurowany przez `buildConfigField` w `android/app/build.gradle.kts`:
+
+| Wariant | Adres | Użycie |
+|---|---|---|
+| debug | `http://10.0.2.2:8080/` (emulator + lokalny backend) | codzienny development |
+| release | `http://9.205.17.123/` (serwer Azure) | wersja dla prowadzących |
+
+Aby w wariancie debug połączyć się z innym serwerem (np. z Azure z telefonu),
+dopisz w `android/local.properties` (plik nie jest w repozytorium):
+
+    API_BASE_URL=http://9.205.17.123/
+
+Następnie wykonaj Sync i uruchom aplikację ponownie.
+
+**Znane ograniczenie:** serwer działa przez HTTP (bez szyfrowania). Ruch jest
+dozwolony tylko dla wskazanych adresów w `network_security_config.xml`.
+HTTPS jest planowany w późniejszym sprincie.

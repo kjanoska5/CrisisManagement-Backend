@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
+import android.os.Build
 import android.os.Environment
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -32,6 +33,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.android.gms.location.CurrentLocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import java.io.File
@@ -47,7 +49,8 @@ fun ZgloszenieScreen(
     val context = LocalContext.current
     var zdjecieUri by remember { mutableStateOf<Uri?>(null) }
     var rozwinietyDropdown by remember { mutableStateOf(false) }
-    var przyznaneUprawnienia by remember { mutableStateOf(false) }
+    var przyznanaLokalizacja by remember { mutableStateOf(false) }
+    var przyznanyAparat by remember { mutableStateOf(false) }
     val launcherAparatu = rememberLauncherForActivityResult(
         ActivityResultContracts.TakePicture()
     ) { sukces ->
@@ -57,24 +60,35 @@ fun ZgloszenieScreen(
     }
     val launcherUprawnien = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
-    ) { wyniki->
-        przyznaneUprawnienia = wyniki.values.all {it}
-        if(przyznaneUprawnienia){
+    ) { wyniki ->
+        przyznanyAparat = wyniki[Manifest.permission.CAMERA] == true
+        przyznanaLokalizacja =
+            wyniki[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
+                    wyniki[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+
+        if (przyznanaLokalizacja) {
             pobierzLokalizacje(
                 context = context,
-                onSukces = {lat, lng -> viewModel.ustawLokalizacje(lat, lng) },
-                onBlad = { }
+                onSukces = { lat, lng -> viewModel.ustawLokalizacje(lat, lng) },
+                onBlad = {
+                    viewModel.ustawBlad(
+                        "Nie udało się pobrać lokalizacji. Sprawdź, czy lokalizacja jest włączona, i spróbuj ponownie."
+                    )
+                }
             )
+        } else {
+            viewModel.ustawBlad("Do zgłoszenia potrzebna jest zgoda na lokalizację.")
         }
     }
+
     LaunchedEffect(Unit) {
-        launcherUprawnien.launch(
-            arrayOf(
-                Manifest.permission.CAMERA,
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_LOCAL_NETWORK
-            )
-        )
+        val uprawnienia = buildList {
+            add(Manifest.permission.CAMERA)
+            add(Manifest.permission.ACCESS_FINE_LOCATION)
+            add(Manifest.permission.ACCESS_COARSE_LOCATION)
+            if (Build.VERSION.SDK_INT >= 37) add(Manifest.permission.ACCESS_LOCAL_NETWORK)
+        }.toTypedArray()
+        launcherUprawnien.launch(uprawnienia)
     }
     LaunchedEffect(stan.wyslano) {
         if (stan.wyslano){
@@ -88,8 +102,8 @@ fun ZgloszenieScreen(
     ) {
         Text("Zgłoś zdarzenie", style = MaterialTheme.typography.headlineSmall)
         Spacer(Modifier.height(16.dp))
-        if (!przyznaneUprawnienia) {
-            Text("Aplikacja potrzebuje dostępu do aparatu i lokalizacji, żeby zgłosić zdarzenie.")
+        if (!przyznanaLokalizacja) {
+            Text("Aplikacja potrzebuje dostępu do lokalizacji, żeby zgłosić zdarzenie.")
             Spacer(Modifier.height(16.dp))
         }
         ExposedDropdownMenuBox(
@@ -161,11 +175,19 @@ private fun pobierzLokalizacje(
     onBlad: () -> Unit
 ) {
     val client = LocationServices.getFusedLocationProviderClient(context)
-    client.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
+    val zadanie = CurrentLocationRequest.Builder()
+        .setPriority(Priority.PRIORITY_BALANCED_POWER_ACCURACY)
+        .setDurationMillis(15_000)       // limit czasu 15 s
+        .setMaxUpdateAgeMillis(60_000)   // akceptuj pozycję sprzed max. minuty
+        .build()
+
+    client.getCurrentLocation(zadanie, null)
         .addOnSuccessListener { lokalizacja ->
             if (lokalizacja != null) {
                 onSukces(lokalizacja.latitude, lokalizacja.longitude)
-            } else onBlad()
+            } else {
+                onBlad()
+            }
         }
         .addOnFailureListener { onBlad() }
 }

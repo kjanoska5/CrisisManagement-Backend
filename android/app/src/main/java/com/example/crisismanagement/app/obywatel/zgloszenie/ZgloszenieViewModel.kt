@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 
 data class ZgloszenieUiState(
     val listaKategorii : List<ThreatType> = emptyList(),
@@ -56,6 +57,9 @@ class ZgloszenieViewModel : ViewModel() {
     fun ustawLokalizacje(lat: Double, lng: Double){
         _uiState.value = _uiState.value.copy(szerokoscGeo = lat, dlugoscGeo = lng)
     }
+    fun ustawBlad(tekst: String) {
+        _uiState.value = _uiState.value.copy(komunikatBledu = tekst)
+    }
 
     fun wyslijZgloszenie(uzytkownikId: String){
         val stan = _uiState.value
@@ -81,7 +85,11 @@ class ZgloszenieViewModel : ViewModel() {
                 )
             )
             _uiState.value = _uiState.value.copy(wysylanie = false, wyslano = true)
-        } catch (e: Exception){
+        }
+        catch (e: HttpException){
+            _uiState.value = _uiState.value.copy(wysylanie = false, komunikatBledu = "Błąd wysyłki : ${e.response()?.errorBody()?.string()} ${e.code()}")
+        }
+        catch (e: Exception){
                 _uiState.value = _uiState.value.copy(wysylanie = false, komunikatBledu = "Błąd wysyłki : ${e.message}")
             }
         }
