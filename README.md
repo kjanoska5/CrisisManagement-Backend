@@ -105,7 +105,7 @@ Zmienna środowiskowa `ENCRYPTION_KEY` (szyfrowanie karty medycznej) ma ustawion
 ### 4. Interfejs Dyspozytora (Swagger UI)
 System udostępnia interaktywną dokumentację API (Swagger UI), która pełni funkcję panelu dla dyspozytorów. Pozwala na przeglądanie zgłoszeń i zmianę ich statusu bezpośrednio z poziomu przeglądarki na serwerze produkcyjnym.
 
-1. Otwórz w przeglądarce panel dyspozytora: `http://9.205.17.123/swagger-ui.html`
+1. Otwórz w przeglądarce panel dyspozytora: `http://9.205.17.123:8080/swagger-ui.html`
 2. Aby pobrać ID konkretnego zgłoszenia, rozwiń sekcję `GET /api/reports` i kliknij **Try it out** -> **Execute**.
 3. Aby zmienić status zgłoszenia, rozwiń `PATCH /api/reports/{id}/status` i kliknij **Try it out**.
 4. Wklej ID zgłoszenia, wybierz z listy nowy status (np. `IN_PROGRESS`, `VERIFIED`, `RESOLVED`) i kliknij **Execute**. 
@@ -133,12 +133,12 @@ Adres API jest konfigurowany przez `buildConfigField` w `android/app/build.gradl
 | Wariant | Adres | Użycie |
 |---|---|---|
 | debug | `http://10.0.2.2:8080/` (emulator + lokalny backend) | codzienny development |
-| release | `http://9.205.17.123/` (serwer Azure) | wersja dla prowadzących |
+| release | `http://9.205.17.123:8080/` (serwer Azure) | wersja dla prowadzących |
 
 Aby w wariancie debug połączyć się z innym serwerem (np. z Azure z telefonu),
 dopisz w `android/local.properties` (plik nie jest w repozytorium):
 
-    API_BASE_URL=http://9.205.17.123/
+    API_BASE_URL=http://9.205.17.123:8080/
 
 Następnie wykonaj Sync i uruchom aplikację ponownie.
 
