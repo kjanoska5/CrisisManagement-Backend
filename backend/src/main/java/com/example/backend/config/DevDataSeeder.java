@@ -8,6 +8,7 @@ import com.example.backend.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 
@@ -18,20 +19,16 @@ public class DevDataSeeder {
     @Bean
     CommandLineRunner loadTestData(
             UserRepository userRepository,
-            ThreatTypeRepository threatTypeRepository
+            ThreatTypeRepository threatTypeRepository,
+            JdbcTemplate jdbcTemplate
     ) {
         return args -> {
-            // tworzenie uzytkownika jesli baza pusta
             if (userRepository.count() == 0) {
-                User testUser = new User();
-                testUser.setId(java.util.UUID.fromString("a4bab6f2-60fa-461a-b7b5-746b0e883896"));
-                testUser.setEmail("test.citizen@example.com");
-                testUser.setPasswordHash("stub");
-                testUser.setRole(Role.CITIZEN);
-                testUser.setFirstName("john");
-                testUser.setLastName("doe");
-                userRepository.save(testUser);
-                System.out.println("test user created: " + testUser.getId());
+                jdbcTemplate.update(
+                        "INSERT INTO users (id, email, password_hash, role, first_name, last_name, created_at) VALUES (?::uuid, ?, ?, ?, ?, ?, NOW())",
+                        "a4bab6f2-60fa-461a-b7b5-746b0e883896", "test.citizen@example.com", "stub", 0, "john", "doe"
+                );
+                System.out.println("test user created directly via SQL");
             }
 
             // tworzenie typow zagrozien
