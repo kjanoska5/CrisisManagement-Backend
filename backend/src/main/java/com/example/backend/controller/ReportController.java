@@ -9,6 +9,11 @@ import com.example.backend.model.Report;
 import com.example.backend.repository.ReportRepository;
 import com.example.backend.repository.ThreatTypeRepository;
 import com.example.backend.repository.UserRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -18,17 +23,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
 import java.util.UUID;
 import java.util.List;
 import com.example.backend.dto.MapReportDto;
 import java.util.stream.Collectors;
 
-// obsluga zgloszen api
 @RestController
 @RequestMapping("/api/reports")
+@Tag(name = "Reports", description = "Incident and threat reports management")
 public class ReportController {
 
-    // uklad wspolrzednych wgs84
     private static final int WGS84_SRID = 4326;
     private final GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), WGS84_SRID);
 
@@ -46,9 +51,13 @@ public class ReportController {
         this.threatTypeRepository = threatTypeRepository;
     }
 
-    // tworzenie nowego zgloszenia
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Create a new report", description = "Registers a new report based on mobile app data (GPS coordinates, type, comment).")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Report successfully created"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data (e.g., missing UUID or unknown threat type)")
+    })
     public ReportResponse create(@Valid @RequestBody NewReportRequest request) {
 
         User user = userRepository.findById(request.getUserId())
@@ -74,6 +83,8 @@ public class ReportController {
     }
 
     @GetMapping
+    @Operation(summary = "Get all reports", description = "Returns a list of all reports with their status and coordinates for map rendering.")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved the list of reports")
     public ResponseEntity<List<MapReportDto>> getAllReports() {
         List<MapReportDto> reports = reportRepository.findAll().stream()
                 .map(report -> {
@@ -95,9 +106,14 @@ public class ReportController {
     }
 
     @PatchMapping("/{id}/status")
+    @Operation(summary = "Update report status", description = "Endpoint for manually updating the report status (e.g., from a dispatcher's computer).")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Status successfully updated"),
+            @ApiResponse(responseCode = "404", description = "Report not found for the given UUID")
+    })
     public ResponseEntity<MapReportDto> updateReportStatus(
-            @PathVariable UUID id,
-            @RequestParam ReportStatus status) {
+            @Parameter(description = "UUID of the report to update") @PathVariable UUID id,
+            @Parameter(description = "New status of the report (e.g., VERIFIED, IN_PROGRESS, RESOLVED, REJECTED)") @RequestParam ReportStatus status) {
 
         return reportRepository.findById(id)
                 .map(report -> {

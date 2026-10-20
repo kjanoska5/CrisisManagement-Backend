@@ -1,0 +1,676 @@
+{
+  "info": {
+    "_postman_id": "73c86a13-6ae3-46d3-98b6-c7855215d4b7",
+    "name": "OpenAPI definition",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "58403885",
+    "_collection_link": "https://go.postman.co/collection/58403885-73c86a13-6ae3-46d3-98b6-c7855215d4b7?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "api",
+      "item": [
+        {
+          "name": "users",
+          "item": [
+            {
+              "name": "{userId}",
+              "item": [
+                {
+                  "name": "medical-card",
+                  "item": [
+                    {
+                      "name": "get Card",
+                      "request": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "*/*"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/api/users/:userId/medical-card",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "users",
+                            ":userId",
+                            "medical-card"
+                          ],
+                          "variable": [
+                            {
+                              "key": "userId",
+                              "value": "de105d9c-7a90-f9c1-4af7-03ca9edc8214"
+                            }
+                          ]
+                        }
+                      },
+                      "response": [
+                        {
+                          "name": "OK",
+                          "originalRequest": {
+                            "method": "GET",
+                            "header": [
+                              {
+                                "key": "Accept",
+                                "value": "*/*"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/api/users/:userId/medical-card",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "users",
+                                ":userId",
+                                "medical-card"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "userId",
+                                  "value": "de105d9c-7a90-f9c1-4af7-03ca9edc8214"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "text",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "*/*"
+                            }
+                          ],
+                          "cookie": [],
+                          "body": "{\n  \"id\": 5684,\n  \"bloodType\": \"string\",\n  \"allergies\": \"string\",\n  \"chronicDiseases\": \"string\",\n  \"emergencyContact\": \"string\",\n  \"medications\": \"string\"\n}"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "update Card",
+                      "request": {
+                        "method": "PUT",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "*/*"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"bloodType\": \"string\",\n  \"allergies\": \"string\",\n  \"chronicDiseases\": \"string\",\n  \"emergencyContact\": \"string\",\n  \"medications\": \"string\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/users/:userId/medical-card",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "users",
+                            ":userId",
+                            "medical-card"
+                          ],
+                          "variable": [
+                            {
+                              "key": "userId",
+                              "value": "de105d9c-7a90-f9c1-4af7-03ca9edc8214"
+                            }
+                          ]
+                        }
+                      },
+                      "response": [
+                        {
+                          "name": "OK",
+                          "originalRequest": {
+                            "method": "PUT",
+                            "header": [
+                              {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                              },
+                              {
+                                "key": "Accept",
+                                "value": "*/*"
+                              }
+                            ],
+                            "body": {
+                              "mode": "raw",
+                              "raw": "{\n  \"bloodType\": \"string\",\n  \"allergies\": \"string\",\n  \"chronicDiseases\": \"string\",\n  \"emergencyContact\": \"string\",\n  \"medications\": \"string\"\n}",
+                              "options": {
+                                "raw": {
+                                  "headerFamily": "json",
+                                  "language": "json"
+                                }
+                              }
+                            },
+                            "url": {
+                              "raw": "{{baseUrl}}/api/users/:userId/medical-card",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "users",
+                                ":userId",
+                                "medical-card"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "userId",
+                                  "value": "de105d9c-7a90-f9c1-4af7-03ca9edc8214"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "text",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "*/*"
+                            }
+                          ],
+                          "cookie": [],
+                          "body": "{\n  \"id\": 5684,\n  \"bloodType\": \"string\",\n  \"allergies\": \"string\",\n  \"chronicDiseases\": \"string\",\n  \"emergencyContact\": \"string\",\n  \"medications\": \"string\"\n}"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "delete Card",
+                      "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                          "raw": "{{baseUrl}}/api/users/:userId/medical-card",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "users",
+                            ":userId",
+                            "medical-card"
+                          ],
+                          "variable": [
+                            {
+                              "key": "userId",
+                              "value": "de105d9c-7a90-f9c1-4af7-03ca9edc8214"
+                            }
+                          ]
+                        }
+                      },
+                      "response": [
+                        {
+                          "name": "OK",
+                          "originalRequest": {
+                            "method": "DELETE",
+                            "header": [],
+                            "url": {
+                              "raw": "{{baseUrl}}/api/users/:userId/medical-card",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "users",
+                                ":userId",
+                                "medical-card"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "userId",
+                                  "value": "de105d9c-7a90-f9c1-4af7-03ca9edc8214"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "text",
+                          "header": [],
+                          "cookie": [],
+                          "body": null
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "reports",
+          "item": [
+            {
+              "name": "{id}",
+              "item": [
+                {
+                  "name": "status",
+                  "item": [
+                    {
+                      "name": "Update report status",
+                      "request": {
+                        "method": "PATCH",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "*/*"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/api/reports/:id/status?status=RESOLVED",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "reports",
+                            ":id",
+                            "status"
+                          ],
+                          "query": [
+                            {
+                              "description": "New status of the report (e.g., VERIFIED, IN_PROGRESS, RESOLVED, REJECTED)",
+                              "key": "status",
+                              "value": "RESOLVED"
+                            }
+                          ],
+                          "variable": [
+                            {
+                              "key": "id",
+                              "value": "de105d9c-7a90-f9c1-4af7-03ca9edc8214",
+                              "description": "UUID of the report to update"
+                            }
+                          ]
+                        },
+                        "description": "Endpoint for manually updating the report status (e.g., from a dispatcher's computer)."
+                      },
+                      "response": [
+                        {
+                          "name": "Status successfully updated",
+                          "originalRequest": {
+                            "method": "PATCH",
+                            "header": [
+                              {
+                                "key": "Accept",
+                                "value": "*/*"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/api/reports/:id/status?status=RESOLVED",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "reports",
+                                ":id",
+                                "status"
+                              ],
+                              "query": [
+                                {
+                                  "description": "New status of the report (e.g., VERIFIED, IN_PROGRESS, RESOLVED, REJECTED)",
+                                  "key": "status",
+                                  "value": "RESOLVED"
+                                }
+                              ],
+                              "variable": [
+                                {
+                                  "key": "id",
+                                  "value": "de105d9c-7a90-f9c1-4af7-03ca9edc8214",
+                                  "description": "UUID of the report to update"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "text",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "*/*"
+                            }
+                          ],
+                          "cookie": [],
+                          "body": "{\n  \"id\": \"8f1dcc02-5ee9-256f-65e7-afa619b0eea6\",\n  \"lat\": 8021.274630531922,\n  \"lng\": 8418.817169157459,\n  \"status\": \"ACTIVE\",\n  \"threatTypeId\": \"0596fdc1-0e35-fa17-f615-81cf83e26d71\",\n  \"comment\": \"string\"\n}"
+                        },
+                        {
+                          "name": "Report not found for the given UUID",
+                          "originalRequest": {
+                            "method": "PATCH",
+                            "header": [
+                              {
+                                "key": "Accept",
+                                "value": "*/*"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/api/reports/:id/status?status=RESOLVED",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "reports",
+                                ":id",
+                                "status"
+                              ],
+                              "query": [
+                                {
+                                  "description": "New status of the report (e.g., VERIFIED, IN_PROGRESS, RESOLVED, REJECTED)",
+                                  "key": "status",
+                                  "value": "RESOLVED"
+                                }
+                              ],
+                              "variable": [
+                                {
+                                  "key": "id",
+                                  "value": "de105d9c-7a90-f9c1-4af7-03ca9edc8214",
+                                  "description": "UUID of the report to update"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "Not Found",
+                          "code": 404,
+                          "_postman_previewlanguage": "text",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "*/*"
+                            }
+                          ],
+                          "cookie": [],
+                          "body": "{\n  \"id\": \"8f1dcc02-5ee9-256f-65e7-afa619b0eea6\",\n  \"lat\": 8021.274630531922,\n  \"lng\": 8418.817169157459,\n  \"status\": \"ACTIVE\",\n  \"threatTypeId\": \"0596fdc1-0e35-fa17-f615-81cf83e26d71\",\n  \"comment\": \"string\"\n}"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Get all reports",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "*/*"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/reports",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "reports"
+                  ]
+                },
+                "description": "Returns a list of all reports with their status and coordinates for map rendering."
+              },
+              "response": [
+                {
+                  "name": "Successfully retrieved the list of reports",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "*/*"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/reports",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "reports"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "text",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "*/*"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "[\n  {\n    \"id\": \"c16999d4-598b-bd2b-cb84-6f15be741d85\",\n    \"lat\": 9036.101069414222,\n    \"lng\": 3087.8754040792455,\n    \"status\": \"VERIFYING\",\n    \"threatTypeId\": \"84e38998-0026-1dfa-f121-b2b07389dabb\",\n    \"comment\": \"string\"\n  },\n  {\n    \"id\": \"6cdf6fdc-5153-d600-af77-300f8f7d1db3\",\n    \"lat\": 808.9277855029376,\n    \"lng\": 8530.653010860371,\n    \"status\": \"ACTIVE\",\n    \"threatTypeId\": \"25516525-117b-7a99-08e3-de3cbc9c6b05\",\n    \"comment\": \"string\"\n  }\n]"
+                }
+              ]
+            },
+            {
+              "name": "Create a new report",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "*/*"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"lat\": 6719.050147003382,\n  \"lng\": 6655.447481287675,\n  \"threatTypeId\": \"163bd842-1080-79d9-e67e-81406a31abce\",\n  \"userId\": \"fdd54bfd-59bc-c8fa-a0c2-1742daa9936a\",\n  \"photoUrl\": \"string\",\n  \"comment\": \"string\"\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/reports",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "reports"
+                  ]
+                },
+                "description": "Registers a new report based on mobile app data (GPS coordinates, type, comment)."
+              },
+              "response": [
+                {
+                  "name": "Report successfully created",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "*/*"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"lat\": 6719.050147003382,\n  \"lng\": 6655.447481287675,\n  \"threatTypeId\": \"163bd842-1080-79d9-e67e-81406a31abce\",\n  \"userId\": \"fdd54bfd-59bc-c8fa-a0c2-1742daa9936a\",\n  \"photoUrl\": \"string\",\n  \"comment\": \"string\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/reports",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "reports"
+                      ]
+                    }
+                  },
+                  "status": "Created",
+                  "code": 201,
+                  "_postman_previewlanguage": "text",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "*/*"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n  \"id\": \"125eb781-09bd-8b1f-730d-bae7eafe9c43\",\n  \"createdAt\": \"2002-12-09T15:24:47.750Z\"\n}"
+                },
+                {
+                  "name": "Invalid input data (e.g., missing UUID or unknown threat type)",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "*/*"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"lat\": 6719.050147003382,\n  \"lng\": 6655.447481287675,\n  \"threatTypeId\": \"163bd842-1080-79d9-e67e-81406a31abce\",\n  \"userId\": \"fdd54bfd-59bc-c8fa-a0c2-1742daa9936a\",\n  \"photoUrl\": \"string\",\n  \"comment\": \"string\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/reports",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "reports"
+                      ]
+                    }
+                  },
+                  "status": "Bad Request",
+                  "code": 400,
+                  "_postman_previewlanguage": "text",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "*/*"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n  \"id\": \"125eb781-09bd-8b1f-730d-bae7eafe9c43\",\n  \"createdAt\": \"2002-12-09T15:24:47.750Z\"\n}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "threat-types",
+          "item": [
+            {
+              "name": "get All",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "*/*"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/threat-types",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "threat-types"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "OK",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "*/*"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/threat-types",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "threat-types"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "text",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "*/*"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "[\n  {\n    \"id\": \"f6b0f3a8-b404-7622-ecd9-ea2561d2aa0f\",\n    \"name\": \"string\",\n    \"icon\": \"string\"\n  },\n  {\n    \"id\": \"78044f0b-ecad-119f-9e8f-58560bd2b5e8\",\n    \"name\": \"string\",\n    \"icon\": \"string\"\n  }\n]"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    }
+  ]
+}

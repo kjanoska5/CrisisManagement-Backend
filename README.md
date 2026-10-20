@@ -102,6 +102,16 @@ Zmienna środowiskowa `ENCRYPTION_KEY` (szyfrowanie karty medycznej) ma ustawion
 
 > Backend (krok 2) musi działać lokalnie, żeby aplikacja mogła się z nim komunikować. Na emulatorze Androida adres `10.0.2.2` wskazuje na `localhost` komputera-hosta — to oczekiwane zachowanie, nie błąd konfiguracji.
 
+### 4. Interfejs Dyspozytora (Swagger UI)
+System udostępnia interaktywną dokumentację API (Swagger UI), która pełni funkcję panelu dla dyspozytorów. Pozwala na przeglądanie zgłoszeń i zmianę ich statusu bezpośrednio z poziomu przeglądarki na serwerze produkcyjnym.
+
+1. Otwórz w przeglądarce panel dyspozytora: `http://9.205.17.123/swagger-ui.html`
+2. Aby pobrać ID konkretnego zgłoszenia, rozwiń sekcję `GET /api/reports` i kliknij **Try it out** -> **Execute**.
+3. Aby zmienić status zgłoszenia, rozwiń `PATCH /api/reports/{id}/status` i kliknij **Try it out**.
+4. Wklej ID zgłoszenia, wybierz z listy nowy status (np. `IN_PROGRESS`, `VERIFIED`, `RESOLVED`) i kliknij **Execute**. 
+
+Zmiana natychmiast zaktualizuje rekord w chmurowej bazie danych na serwerze Azure, a nowy status (wraz z odpowiednim kolorem pinezki) zaktualizuje się automatycznie u wszystkich użytkowników aplikacji mobilnej.
+
 ---
 
 ##  Struktura Repozytorium

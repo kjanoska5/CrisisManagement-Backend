@@ -26,7 +26,7 @@ public class DevDataSeeder {
             if (userRepository.count() == 0) {
                 jdbcTemplate.update(
                         "INSERT INTO users (id, email, password_hash, role, first_name, last_name, created_at) VALUES (?::uuid, ?, ?, ?, ?, ?, NOW())",
-                        "a4bab6f2-60fa-461a-b7b5-746b0e883896", "test.citizen@example.com", "stub", 0, "john", "doe"
+                        "a4bab6f2-60fa-461a-b7b5-746b0e883896", "test.citizen@example.com", "stub", "CITIZEN", "john", "doe"
                 );
                 System.out.println("test user created directly via SQL");
             }
