@@ -1,6 +1,9 @@
 package com.example.crisismanagement.app.common.components
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
@@ -32,6 +35,7 @@ import androidx.compose.runtime.key
 @Composable
 fun MapaWidok(
     modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(),
     reports: List<ReportSummary> = emptyList(),
     chosenReport: ReportSummary? = null,
     categories: Map<String, String> = emptyMap(),
@@ -42,7 +46,8 @@ fun MapaWidok(
 
     GoogleMap(
         modifier = modifier.fillMaxSize(),
-        cameraPositionState = cameraPositionState
+        cameraPositionState = cameraPositionState,
+        contentPadding = contentPadding
     ) {
         reports.forEach { report ->
             key(report.id) {
