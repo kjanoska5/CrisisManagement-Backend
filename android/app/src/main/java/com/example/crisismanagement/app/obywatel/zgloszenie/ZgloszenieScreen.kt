@@ -176,9 +176,9 @@ private fun pobierzLokalizacje(
 ) {
     val client = LocationServices.getFusedLocationProviderClient(context)
     val zadanie = CurrentLocationRequest.Builder()
-        .setPriority(Priority.PRIORITY_BALANCED_POWER_ACCURACY)
-        .setDurationMillis(15_000)       // limit czasu 15 s
-        .setMaxUpdateAgeMillis(60_000)   // akceptuj pozycję sprzed max. minuty
+        .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
+        .setDurationMillis(15_000)
+        .setMaxUpdateAgeMillis(10_000)
         .build()
 
     client.getCurrentLocation(zadanie, null)
