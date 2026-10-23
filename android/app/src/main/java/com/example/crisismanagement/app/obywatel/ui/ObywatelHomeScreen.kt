@@ -1,6 +1,7 @@
 package com.example.crisismanagement.app.obywatel.ui
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -32,7 +33,8 @@ fun ObywatelHomeScreen(
             chosenReport = mapState.chosenReports,
             categories = mapState.categories,
             onReportClick = {mapaZagrozenViewModel.chooseReport(it)},
-            onDismissDialog = {mapaZagrozenViewModel.chooseReport(null)}
+            onDismissDialog = {mapaZagrozenViewModel.chooseReport(null)},
+            contentPadding = PaddingValues(bottom = 88.dp)
         )
 
         SmallFloatingActionButton(
