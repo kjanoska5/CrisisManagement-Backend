@@ -22,6 +22,8 @@ public class UpdateReportRequest {
 
     private String comment;
 
+    private String source;
+
     public UUID getThreatTypeId() { return threatTypeId; }
     public void setThreatTypeId(UUID threatTypeId) { this.threatTypeId = threatTypeId; }
 
@@ -33,4 +35,7 @@ public class UpdateReportRequest {
 
     public String getComment() { return comment; }
     public void setComment(String comment) { this.comment = comment; }
+
+    public String getSource() { return source; }
+    public void setSource(String source) { this.source = source; }
 }

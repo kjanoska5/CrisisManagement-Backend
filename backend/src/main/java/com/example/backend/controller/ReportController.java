@@ -89,6 +89,7 @@ public class ReportController {
                     report.setStatus(ReportStatus.ACTIVE);
                 }
             } catch (IllegalArgumentException e) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid report source");
             }
         }
 
@@ -171,6 +172,17 @@ public class ReportController {
                     report.setThreatType(type);
                     report.setLocation(location);
                     report.setComment(request.getComment());
+                    if (request.getSource() != null) {
+                        try {
+                            ReportSource source = ReportSource.valueOf(request.getSource().toUpperCase());
+                            report.setSource(source);
+                            if (source == ReportSource.SERVICE) {
+                                report.setStatus(ReportStatus.ACTIVE);
+                            }
+                        } catch (IllegalArgumentException e) {
+                            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid report source");
+                        }
+                    }
 
                     Report updatedReport = reportRepository.save(report);
 

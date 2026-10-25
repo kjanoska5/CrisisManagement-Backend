@@ -37,6 +37,7 @@ public class Report {
     private String comment;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false, columnDefinition = "VARCHAR(20) DEFAULT 'ONLINE'")
     private ReportSource source = ReportSource.ONLINE;
 
     @Column(name = "created_at", nullable = false, updatable = false)
