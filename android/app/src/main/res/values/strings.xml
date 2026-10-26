@@ -20,4 +20,19 @@
     <string name="nav_logout">Wyloguj</string>
     <string name="nav_open_menu">Otwórz menu</string>
     <string name="coming_soon">Wkrótce</string>
+    <string name="nav_tab_map">Mapa</string>
+    <string name="nav_tab_reports">Zgłoszenia</string>
+    <string name="nav_tab_profile">Profil</string>
+    <string name="title_map">Mapa</string>
+    <string name="title_service_map">Mapa służb</string>
+    <string name="title_report">Zgłoszenie</string>
+    <string name="title_details">Szczegóły</string>
+    <string name="title_profile">Profil</string>
+    <string name="title_medical_card">Karta medyczna</string>
+    <string name="profile_role_citizen">Obywatel</string>
+    <string name="profile_role_service">Służby</string>
+    <string name="profile_placeholder">Dane konta pojawią się po wdrożeniu logowania</string>
+    <string name="settings_theme">Motyw aplikacji</string>
+    <string name="settings_language">Język aplikacji</string>
+    <string name="settings_coming_soon">Wybór motywu i języka pojawi się w kolejnych wersjach aplikacji.</string>
 </resources>
