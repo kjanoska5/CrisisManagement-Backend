@@ -36,4 +36,16 @@ interface ZgloszeniaApi {
     // pobieranie listy wszystkich zgłoszeń na mapę
     @GET("api/reports")
     suspend fun getReports(): List<ReportSummary>
+
+    @POST("api/reports")
+    suspend fun createServiceReport(@Body request: ServiceCreateReportRequest): CreatedReportResponse
+
+    @PUT("api/reports/{id}")
+    suspend fun updateReport(
+        @Path("id") id: String,
+        @Body request: ServiceUpdateReportRequest
+    ): ReportSummary
+
+    @DELETE("api/reports/{id}")
+    suspend fun deleteReport(@Path("id") id: String): retrofit2.Response<Unit>
 }

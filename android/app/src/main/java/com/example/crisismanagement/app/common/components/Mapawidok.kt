@@ -40,15 +40,27 @@ fun MapaWidok(
     chosenReport: ReportSummary? = null,
     categories: Map<String, String> = emptyMap(),
     onReportClick: (ReportSummary) -> Unit = {},
-    onDismissDialog: () -> Unit = {}
+    onDismissDialog: () -> Unit = {},
+    onMapClick: (LatLng) -> Unit = {},
+    draftPosition: LatLng? = null,
 ) {
     val cameraPositionState = rememberCameraPositionState()
 
     GoogleMap(
         modifier = modifier.fillMaxSize(),
         cameraPositionState = cameraPositionState,
-        contentPadding = contentPadding
+        contentPadding = contentPadding,
+        onMapClick = onMapClick
     ) {
+        draftPosition?.let { position ->
+            Marker(
+                state = rememberMarkerState(
+                    key = "draft-${position.latitude}-${position.longitude}",
+                    position = position
+                ),
+                icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)
+            )
+        }
         reports.forEach { report ->
             key(report.id) {
                 val markerIcon = when (report.status) {
