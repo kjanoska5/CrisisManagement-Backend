@@ -13,4 +13,11 @@
     <string name="common_delete">Usuń</string>
     <string name="delete_confirm_title">Usunąć zdarzenie?</string>
     <string name="delete_confirm_message">Tej operacji nie można cofnąć.</string>
+    <string name="nav_map">Mapa</string>
+    <string name="nav_my_reports">Moje zgłoszenia</string>
+    <string name="nav_medical_card">Karta medyczna</string>
+    <string name="nav_settings">Ustawienia</string>
+    <string name="nav_logout">Wyloguj</string>
+    <string name="nav_open_menu">Otwórz menu</string>
+    <string name="coming_soon">Wkrótce</string>
 </resources>

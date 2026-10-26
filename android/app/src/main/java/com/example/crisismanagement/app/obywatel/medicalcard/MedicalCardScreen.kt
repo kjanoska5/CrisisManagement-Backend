@@ -44,7 +44,10 @@ fun MedicalCardScreen(
     }
 
     LaunchedEffect(state.saved, state.deleted) {
-        if (state.saved || state.deleted) onSaved()
+        if (state.saved || state.deleted) {
+            viewModel.consumeResult()
+            onSaved()
+        }
     }
 
     if (state.loading) {
@@ -60,9 +63,6 @@ fun MedicalCardScreen(
             .verticalScroll(rememberScrollState())
             .padding(24.dp)
     ) {
-        Text("Karta medyczna", style = MaterialTheme.typography.headlineSmall)
-        Spacer(Modifier.height(16.dp))
-
         OutlinedTextField(
             value = state.bloodType,
             onValueChange = { viewModel.setBloodType(it) },
