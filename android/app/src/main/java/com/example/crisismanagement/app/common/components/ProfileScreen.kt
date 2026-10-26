@@ -36,7 +36,7 @@ fun ProfileScreen(
     role: Rola,
     onOpenMedicalCard: () -> Unit,
     onLogout: () -> Unit,
-    onOpenSettings: () -> Unit = {} // issue #10 will plug the settings screen in here
+    onOpenSettings: () -> Unit = {}
 ) {
     Column(
         modifier = Modifier
