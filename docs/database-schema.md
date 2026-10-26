@@ -1,7 +1,7 @@
 # Schemat bazy danych
 
 **Baza:** PostgreSQL 16 + PostGIS 3.4 (Docker)
-**Tworzenie schematu:** automatycznie przez Hibernate (`ddl-auto: update`) na podstawie encji JPA w `backend/src/main/java/com/example/backend/model/`
+**Tworzenie schematu:** wersjonowane migracjami Flyway w `backend/src/main/resources/db/migration/`. Hibernate używa `ddl-auto: validate`, więc przy starcie sprawdza zgodność encji ze schematem, ale go nie zmienia.
 
 Dokument składa się z dwóch części:
 1. **Stan obecny** — tabele, które istnieją w bazie i są używane przez aplikację.
@@ -20,7 +20,9 @@ erDiagram
     USERS {
         uuid id PK
         string email UK
-        string password_hash
+        string password_hash "nullable dla kont Google"
+        enum auth_provider "LOCAL, GOOGLE"
+        string google_sub UK "nullable dla kont LOCAL"
         enum role "CITIZEN, SERVICES"
         string first_name
         string last_name
@@ -50,7 +52,7 @@ erDiagram
         geography location "Point, SRID 4326"
         string photo_url
         text comment
-        enum source "ONLINE, OFFLINE_SYNC"
+        enum source "ONLINE, OFFLINE_SYNC, SERVICE"
         enum status "ACTIVE, VERIFYING, RESOLVED"
         timestamp created_at
     }
@@ -60,10 +62,22 @@ erDiagram
 
 | Tabela | Rola | Uwagi |
 |---|---|---|
-| `users` | Użytkownicy systemu (obywatele i służby) | Rola w kolumnie `role`. Logowanie i hasła nie są jeszcze zaimplementowane, konto jest tymczasowe. Relacja z kartą medyczną 1:0..1 (klucz obcy w `users`). |
+| `users` | Użytkownicy systemu (obywatele i służby) | Rola w kolumnie `role`; `auth_provider` określa `LOCAL` lub `GOOGLE`. `google_sub` jest unikalny i pusty dla kont lokalnych, a `password_hash` może być pusty dla kont Google. Seedowany użytkownik testowy jest wyłącznie profilem demonstracyjnym i nie ma danych logowania. Relacja z kartą medyczną 1:0..1 (klucz obcy w `users`). |
 | `medical_cards` | Profil zdrowotny użytkownika | Pola wrażliwe szyfrowane algorytmem AES na poziomie JPA (`AttributeConverter`), w bazie przechowywane jako Base64. |
-| `threat_types` | Słownik kategorii zagrożeń | Zamiast wolnego tekstu, żeby kategorie były spójne i filtrowalne. Wartości testowe wstawia `DevDataSeeder`. |
-| `reports` | Zgłoszenia zdarzeń widoczne na mapie | Lokalizacja jako typ geograficzny PostGIS. Status określa kolor pinezki. |
+| `threat_types` | Słownik kategorii zagrożeń | Zamiast wolnego tekstu, żeby kategorie były spójne i filtrowalne. Początkowe wartości są wstawiane przez migrację `V2__insert_seed_data.sql`. |
+| `reports` | Zgłoszenia zdarzeń widoczne na mapie | Lokalizacja jako typ geograficzny PostGIS. Status określa kolor pinezki. `reports` obecnie pełni również rolę zdarzenia; rozdzielenie zgłoszeń i zdarzeń pozostaje planowane w ramach issue #21. |
+
+### Migracje i dane startowe
+
+- `V1__init_schema.sql` tworzy kompletny schemat na pustej bazie PostgreSQL z PostGIS.
+- `V2__insert_seed_data.sql` dodaje testowego użytkownika i typy zagrożeń.
+- `V3__schema_compatibility_and_seed.sql` dopina ograniczenia logowania Google, nullable `password_hash` oraz bezpieczne zachowanie klucza karty. Ponawia inserty startowe w sposób idempotentny.
+- Dla istniejącej bazy utworzonej przed Flyway należy ustawić `baseline-on-migrate: true` i baseline na wersji 2. Flyway pominie V1/V2 i wykona V3, która uzupełnia istniejący schemat. Pusta baza nie jest baseline'owana: wykonuje V1, V2 i V3.
+- Lokalne połączenie i port PostgreSQL są konfigurowane w `application.yml` oraz `docker-compose.yml`. Na serwerze należy podać `SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_USERNAME` i `SPRING_DATASOURCE_PASSWORD`; serwer musi mieć PostgreSQL z PostGIS i uprawnienia do utworzenia rozszerzenia.
+
+### Przegląd ERD względem encji
+
+ERD dla zaimplementowanych tabel odpowiada encjom `User`, `MedicalCard`, `ThreatType` i `Report`: uwzględnia klucze główne, relację 1:0..1 użytkownik–karta medyczna, relacje raportu do użytkownika i typu zagrożenia oraz pola logowania lokalnego/Google. W aktualnym modelu raport jednocześnie reprezentuje zdarzenie wyświetlane na mapie; osobna tabela `events` i grupowanie raportów nie są częścią obecnego schematu i pozostają planowane.
 
 ### Statusy zgłoszenia
 

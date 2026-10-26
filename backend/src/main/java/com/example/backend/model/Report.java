@@ -44,6 +44,7 @@ public class Report {
     private Instant createdAt = Instant.now();
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 50)
     private ReportStatus status = ReportStatus.VERIFYING;
 
     public UUID getId() { return id; }
