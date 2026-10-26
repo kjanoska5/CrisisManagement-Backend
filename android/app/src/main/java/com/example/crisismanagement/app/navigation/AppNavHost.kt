@@ -8,19 +8,21 @@ import androidx.navigation.compose.rememberNavController
 import com.example.crisismanagement.app.enums.Rola
 import com.example.crisismanagement.app.login.LoginScreen
 import com.example.crisismanagement.app.navigation.Route
-import com.example.crisismanagement.app.obywatel.medicalcard.MedicalCardScreen
-import com.example.crisismanagement.app.obywatel.ui.ObywatelHomeScreen
 import com.example.crisismanagement.app.obywatel.zgloszenie.ZgloszenieScreen
-import com.example.crisismanagement.app.sluzby.ui.SluzbyHomeScreen
 
 // TODO: usunąć, gdy powstanie prawdziwa autoryzacja — na razie jedno miejsce do podmiany ID
-// PODMIEŃ na ID zwrócone przez: SELECT id, email FROM users;
 private const val TYMCZASOWY_UZYTKOWNIK_ID = "a4bab6f2-60fa-461a-b7b5-746b0e883896"
 
 @Composable
 fun AppNavHost(
     navController: NavHostController = rememberNavController()
 ) {
+    val logout: () -> Unit = {
+        navController.navigate(Route.Login.route) {
+            popUpTo(navController.graph.id) { inclusive = true }
+        }
+    }
+
     NavHost(navController = navController, startDestination = Route.Login.route) {
 
         composable(Route.Login.route) {
@@ -38,24 +40,27 @@ fun AppNavHost(
         }
 
         composable(Route.ObywatelHome.route) {
-            ObywatelHomeScreen(navController)
+            MainContainer(
+                role = Rola.OBYWATEL,
+                userId = TYMCZASOWY_UZYTKOWNIK_ID,
+                onNewReport = { navController.navigate(Route.ZgloszenieForm.route) },
+                onLogout = logout
+            )
         }
 
         composable(Route.SluzbyHome.route) {
-            SluzbyHomeScreen()
+            MainContainer(
+                role = Rola.SLUZBY,
+                userId = TYMCZASOWY_UZYTKOWNIK_ID,
+                onNewReport = {},
+                onLogout = logout
+            )
         }
 
         composable(Route.ZgloszenieForm.route) {
             ZgloszenieScreen(
                 uzytkownikId = TYMCZASOWY_UZYTKOWNIK_ID,
                 onZgloszeniaWyslano = { navController.popBackStack() }
-            )
-        }
-
-        composable(Route.MedicalCard.route) {
-            MedicalCardScreen(
-                userId = TYMCZASOWY_UZYTKOWNIK_ID,
-                onSaved = { navController.popBackStack() }
             )
         }
     }

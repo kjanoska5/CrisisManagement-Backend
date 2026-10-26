@@ -7,6 +7,7 @@ import com.example.crisismanagement.app.common.network.RetrofitClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 data class MedicalCardUiState(
@@ -127,5 +128,8 @@ class MedicalCardViewModel : ViewModel() {
                 )
             }
         }
+    }
+    fun consumeResult() {
+        _uiState.update { it.copy(saved = false, deleted = false) }
     }
 }
