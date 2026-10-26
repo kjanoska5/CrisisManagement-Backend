@@ -1,4 +1,4 @@
-package com.example.crisismanagement.app.common.navigation
+package com.example.crisismanagement.app.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
@@ -7,8 +7,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.crisismanagement.app.enums.Rola
 import com.example.crisismanagement.app.login.LoginScreen
-import com.example.crisismanagement.app.navigation.Route
-import com.example.crisismanagement.app.obywatel.zgloszenie.ZgloszenieScreen
 
 // TODO: usunąć, gdy powstanie prawdziwa autoryzacja — na razie jedno miejsce do podmiany ID
 private const val TYMCZASOWY_UZYTKOWNIK_ID = "a4bab6f2-60fa-461a-b7b5-746b0e883896"
@@ -43,7 +41,6 @@ fun AppNavHost(
             MainContainer(
                 role = Rola.OBYWATEL,
                 userId = TYMCZASOWY_UZYTKOWNIK_ID,
-                onNewReport = { navController.navigate(Route.ZgloszenieForm.route) },
                 onLogout = logout
             )
         }
@@ -52,15 +49,7 @@ fun AppNavHost(
             MainContainer(
                 role = Rola.SLUZBY,
                 userId = TYMCZASOWY_UZYTKOWNIK_ID,
-                onNewReport = {},
                 onLogout = logout
-            )
-        }
-
-        composable(Route.ZgloszenieForm.route) {
-            ZgloszenieScreen(
-                uzytkownikId = TYMCZASOWY_UZYTKOWNIK_ID,
-                onZgloszeniaWyslano = { navController.popBackStack() }
             )
         }
     }

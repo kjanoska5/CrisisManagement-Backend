@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.example.crisismanagement.app.common.navigation.AppNavHost
+import com.example.crisismanagement.app.navigation.AppNavHost
 import com.example.crisismanagement.ui.theme.CrisisManagementTheme
 
 class MainActivity : ComponentActivity() {

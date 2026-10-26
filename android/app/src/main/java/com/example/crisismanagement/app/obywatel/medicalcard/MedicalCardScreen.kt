@@ -4,18 +4,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -29,6 +24,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.crisismanagement.app.common.components.AppTextField
+import com.example.crisismanagement.app.common.components.InfoCard
+import com.example.crisismanagement.app.common.components.PrimaryButton
+import com.example.crisismanagement.app.common.components.SecondaryButton
 
 @Composable
 fun MedicalCardScreen(
@@ -61,71 +60,65 @@ fun MedicalCardScreen(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(24.dp)
+            .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
-        OutlinedTextField(
+        AppTextField(
+            label = "Grupa krwi",
             value = state.bloodType,
             onValueChange = { viewModel.setBloodType(it) },
-            label = { Text("Grupa krwi") },
-            modifier = Modifier.fillMaxWidth()
+            placeholder = "Nie uzupełniono"
         )
         Spacer(Modifier.height(12.dp))
-
-        OutlinedTextField(
+        AppTextField(
+            label = "Alergie",
             value = state.allergies,
             onValueChange = { viewModel.setAllergies(it) },
-            label = { Text("Alergie") },
-            modifier = Modifier.fillMaxWidth()
+            placeholder = "Nie uzupełniono"
         )
         Spacer(Modifier.height(12.dp))
-
-        OutlinedTextField(
-            value = state.chronicDiseases,
-            onValueChange = { viewModel.setChronicDiseases(it) },
-            label = { Text("Choroby przewlekłe") },
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(Modifier.height(12.dp))
-
-        OutlinedTextField(
+        AppTextField(
+            label = "Przyjmowane leki",
             value = state.medicines,
             onValueChange = { viewModel.setMedicines(it) },
-            label = { Text("Przyjmowane leki") },
-            modifier = Modifier.fillMaxWidth()
+            placeholder = "Nie uzupełniono"
         )
         Spacer(Modifier.height(12.dp))
-
-        OutlinedTextField(
+        AppTextField(
+            label = "Kontakt alarmowy",
             value = state.emergencyContact,
             onValueChange = { viewModel.setEmergencyContact(it) },
-            label = { Text("Kontakt alarmowy") },
-            modifier = Modifier.fillMaxWidth()
+            placeholder = "Nie uzupełniono"
         )
-        Spacer(Modifier.height(24.dp))
+        Spacer(Modifier.height(12.dp))
+        AppTextField(
+            label = "Choroby przewlekłe",
+            value = state.chronicDiseases,
+            onValueChange = { viewModel.setChronicDiseases(it) },
+            placeholder = "Nie uzupełniono"
+        )
+        Spacer(Modifier.height(16.dp))
 
         state.error?.let {
             Text(it, color = MaterialTheme.colorScheme.error)
             Spacer(Modifier.height(8.dp))
         }
 
-        Button(
+        PrimaryButton(
+            text = if (state.saving) "Zapisywanie..." else if (state.cardExists) "Zapisz kartę" else "Uzupełnij kartę",
             onClick = { viewModel.saveCard(userId) },
-            enabled = !state.saving && !state.deleting,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(if (state.saving) "Zapisywanie..." else "Zapisz kartę medyczną")
-        }
+            enabled = !state.saving && !state.deleting
+        )
+        Spacer(Modifier.height(12.dp))
+        InfoCard("Uzupełniaj tylko potrzebne dane. Zdecyduj, co chcesz udostępnić służbom.")
 
         if (state.cardExists) {
-            Spacer(Modifier.height(12.dp))
-            OutlinedButton(
+            Spacer(Modifier.height(16.dp))
+            SecondaryButton(
+                text = if (state.deleting) "Usuwanie..." else "Usuń kartę",
                 onClick = { showDeleteDialog = true },
                 enabled = !state.saving && !state.deleting,
-                colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(if (state.deleting) "Usuwanie..." else "Usuń kartę medyczną")
-            }
+                isDanger = true
+            )
         }
     }
 
