@@ -1,4 +1,4 @@
-package com.example.crisismanagement.app.sluzby.reports
+package com.example.crisismanagement.app.services.reports
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,7 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.crisismanagement.R
-import com.example.crisismanagement.app.common.components.MapaWidok
+import com.example.crisismanagement.app.common.components.MapView
 
 @Composable
 fun ServiceMapScreen(
@@ -37,7 +37,7 @@ fun ServiceMapScreen(
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        MapaWidok(
+        MapView(
             reports = state.reports,
             categories = state.categories,
             onReportClick = viewModel::onReportSelected,

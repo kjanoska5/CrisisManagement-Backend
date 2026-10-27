@@ -12,14 +12,15 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
 
-class ConnectionViewModel: ViewModel(){
+class ConnectionViewModel : ViewModel() {
+
     private val _uiState = MutableStateFlow<ConnectionState>(ConnectionState.Checking)
     val uiState: StateFlow<ConnectionState> = _uiState.asStateFlow()
 
     private var refreshJob: Job? = null
 
     init {
-        checkConnection()
+        startAutoRefreshing()
     }
 
     fun checkConnection() {
@@ -27,7 +28,7 @@ class ConnectionViewModel: ViewModel(){
         startAutoRefreshing()
     }
 
-    private fun startAutoRefreshing(){
+    private fun startAutoRefreshing() {
         refreshJob?.cancel()
         refreshJob = viewModelScope.launch {
             while (isActive) {
@@ -36,19 +37,17 @@ class ConnectionViewModel: ViewModel(){
             }
         }
     }
-    private suspend fun performCheck(){
+
+    private suspend fun performCheck() {
         try {
-            val threatTypes = RetrofitClient.api.pobierzTypyZagrozen()
+            val threatTypes = RetrofitClient.api.getThreatTypes()
             _uiState.value = ConnectionState.Connected(typesCount = threatTypes.size)
         } catch (e: HttpException) {
             _uiState.value = ConnectionState.Error(message = "Server error (code: ${e.code()})")
-        }
-        catch (e: IOException) {
+        } catch (e: IOException) {
             _uiState.value = ConnectionState.Error(message = "Network error: Server unreachable or timed out")
-        }
-        catch (e: Exception) {
-            _uiState.value = ConnectionState.Error(message = "Unexpected error: ${e.message?: "Unknown"}")
+        } catch (e: Exception) {
+            _uiState.value = ConnectionState.Error(message = "Unexpected error: ${e.message ?: "Unknown"}")
         }
     }
-
 }

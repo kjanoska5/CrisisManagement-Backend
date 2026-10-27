@@ -1,4 +1,4 @@
-package com.example.crisismanagement.app.obywatel.ui
+package com.example.crisismanagement.app.citizen.ui
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -16,22 +16,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.crisismanagement.app.common.components.MapaWidok
-import com.example.crisismanagement.app.common.components.MapaZagrozenViewModel
+import com.example.crisismanagement.app.common.components.MapView
+import com.example.crisismanagement.app.common.components.ThreatMapViewModel
 
 @Composable
-fun ObywatelHomeScreen(
+fun CitizenHomeScreen(
     onNewReportClick: () -> Unit,
-    mapaZagrozenViewModel: MapaZagrozenViewModel = viewModel()
+    threatMapViewModel: ThreatMapViewModel = viewModel()
 ) {
-    val mapState by mapaZagrozenViewModel.uiState.collectAsState()
+    val mapState by threatMapViewModel.uiState.collectAsState()
     Box(modifier = Modifier.fillMaxSize()) {
-        MapaWidok(
+        MapView(
             reports = mapState.reports,
-            chosenReport = mapState.chosenReports,
+            chosenReport = mapState.chosenReport,
             categories = mapState.categories,
-            onReportClick = { mapaZagrozenViewModel.chooseReport(it) },
-            onDismissDialog = { mapaZagrozenViewModel.chooseReport(null) },
+            onReportClick = { threatMapViewModel.chooseReport(it) },
+            onDismissDialog = { threatMapViewModel.chooseReport(null) },
             contentPadding = PaddingValues(bottom = 88.dp)
         )
 
@@ -41,8 +41,8 @@ fun ObywatelHomeScreen(
             contentColor = MaterialTheme.colorScheme.onPrimary,
             modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp)
         ) {
-            Icon(Icons.Default.Warning, contentDescription = "Zgłoś zdarzenie")
+            Icon(Icons.Default.Warning, contentDescription = "Report incident")
         }
-        // TODO: przycisk SOS (issue 6.1)
+        // TODO: SOS button (issue 6.1)
     }
 }

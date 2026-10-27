@@ -1,4 +1,4 @@
-package com.example.crisismanagement.app.sluzby.reports
+package com.example.crisismanagement.app.services.reports
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -37,9 +37,9 @@ class ServiceMapViewModel : ViewModel() {
     fun loadData() {
         viewModelScope.launch {
             safeCall {
-                val types = RetrofitClient.api.pobierzTypyZagrozen()
+                val types = RetrofitClient.api.getThreatTypes()
                 _uiState.update { state ->
-                    state.copy(categories = types.associate { it.id.toString() to it.name })
+                    state.copy(categories = types.associate { it.id to it.name })
                 }
                 refreshReports()
             }
@@ -68,13 +68,20 @@ class ServiceMapViewModel : ViewModel() {
 
     fun createReport(userId: String, threatTypeId: String, comment: String) {
         val position = _uiState.value.draftPosition ?: return
+        val resolvedTypeId = if (threatTypeId.length == 36 && threatTypeId.contains("-")) {
+            threatTypeId
+        } else {
+            _uiState.value.categories.entries.firstOrNull {
+                it.value.equals(threatTypeId, ignoreCase = true)
+            }?.key ?: threatTypeId
+        }
         viewModelScope.launch {
             _uiState.update { it.copy(isSaving = true) }
             safeCall {
                 RetrofitClient.api.createServiceReport(
                     ServiceCreateReportRequest(
                         userId = userId,
-                        threatTypeId = threatTypeId,
+                        threatTypeId = resolvedTypeId,
                         lat = position.latitude,
                         lng = position.longitude,
                         comment = comment.ifBlank { null }
@@ -89,13 +96,20 @@ class ServiceMapViewModel : ViewModel() {
 
     fun updateReport(threatTypeId: String, comment: String) {
         val report = _uiState.value.selectedReport ?: return
+        val resolvedTypeId = if (threatTypeId.length == 36 && threatTypeId.contains("-")) {
+            threatTypeId
+        } else {
+            _uiState.value.categories.entries.firstOrNull {
+                it.value.equals(threatTypeId, ignoreCase = true)
+            }?.key ?: threatTypeId
+        }
         viewModelScope.launch {
             _uiState.update { it.copy(isSaving = true) }
             safeCall {
                 RetrofitClient.api.updateReport(
                     id = report.id,
                     request = ServiceUpdateReportRequest(
-                        threatTypeId = threatTypeId,
+                        threatTypeId = resolvedTypeId,
                         lat = report.lat,
                         lng = report.lng,
                         comment = comment.ifBlank { null }
@@ -133,10 +147,14 @@ class ServiceMapViewModel : ViewModel() {
         } catch (e: CancellationException) {
             throw e
         } catch (e: HttpException) {
-            setError("Server error (code: ${e.code()})")
+            val errorBody = e.response()?.errorBody()?.string()
+            android.util.Log.e("SERVICE_MAP", "HttpException ${e.code()}: $errorBody", e)
+            setError("Server error (${e.code()}): ${errorBody ?: e.message()}")
         } catch (e: IOException) {
+            android.util.Log.e("SERVICE_MAP", "IOException", e)
             setError("Network error: server unreachable or timed out")
         } catch (e: Exception) {
+            android.util.Log.e("SERVICE_MAP", "Exception", e)
             setError("Unexpected error: ${e.message ?: "unknown"}")
         }
     }

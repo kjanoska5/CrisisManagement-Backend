@@ -28,12 +28,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.crisismanagement.R
-import com.example.crisismanagement.app.enums.Rola
+import com.example.crisismanagement.app.enums.Role
 import com.example.crisismanagement.ui.theme.extendedColors
 
 @Composable
 fun ProfileScreen(
-    role: Rola,
+    role: Role,
     onOpenMedicalCard: () -> Unit,
     onLogout: () -> Unit,
     onOpenSettings: () -> Unit = {}
@@ -64,7 +64,7 @@ fun ProfileScreen(
                 Column {
                     Text(
                         text = stringResource(
-                            if (role == Rola.SLUZBY) R.string.profile_role_service
+                            if (role == Role.SERVICES) R.string.profile_role_service
                             else R.string.profile_role_citizen
                         ),
                         style = MaterialTheme.typography.titleMedium
@@ -80,7 +80,7 @@ fun ProfileScreen(
 
         AppCard(modifier = Modifier.fillMaxWidth()) {
             Column {
-                if (role == Rola.OBYWATEL) {
+                if (role == Role.CITIZEN) {
                     ProfileRow(stringResource(R.string.title_medical_card), onOpenMedicalCard)
                     HorizontalDivider(color = MaterialTheme.colorScheme.outline)
                 }

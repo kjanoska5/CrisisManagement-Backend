@@ -8,11 +8,11 @@ object RetrofitClient {
 
     private const val BASE_URL = BuildConfig.BASE_URL
 
-    val api: ZgloszeniaApi by lazy {
+    val api: ReportsApi by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(ZgloszeniaApi::class.java)
+            .create(ReportsApi::class.java)
     }
 }

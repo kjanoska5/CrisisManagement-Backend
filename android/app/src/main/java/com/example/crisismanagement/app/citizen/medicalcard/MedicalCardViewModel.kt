@@ -1,4 +1,4 @@
-package com.example.crisismanagement.app.obywatel.medicalcard
+package com.example.crisismanagement.app.citizen.medicalcard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -54,13 +54,13 @@ class MedicalCardViewModel : ViewModel() {
                 } else {
                     _uiState.value = _uiState.value.copy(
                         loading = false,
-                        error = "Nieoczekiwany błąd odpowiedzi ${response.code()}"
+                        error = "Unexpected error response ${response.code()}"
                     )
                 }
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
                     loading = false,
-                    error = "Błąd Połączenia: ${e.message ?: "Nieznany błąd"}"
+                    error = "Connection error: ${e.message ?: "Unknown error"}"
                 )
             }
         }
@@ -69,15 +69,19 @@ class MedicalCardViewModel : ViewModel() {
     fun setBloodType(type: String) {
         _uiState.value = _uiState.value.copy(bloodType = type)
     }
+
     fun setAllergies(allergies: String) {
         _uiState.value = _uiState.value.copy(allergies = allergies)
     }
+
     fun setChronicDiseases(chronicDiseases: String) {
         _uiState.value = _uiState.value.copy(chronicDiseases = chronicDiseases)
     }
+
     fun setEmergencyContact(emergencyContact: String) {
         _uiState.value = _uiState.value.copy(emergencyContact = emergencyContact)
     }
+
     fun setMedicines(medicines: String) {
         _uiState.value = _uiState.value.copy(medicines = medicines)
     }
@@ -100,12 +104,12 @@ class MedicalCardViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     _uiState.value = _uiState.value.copy(saving = false, saved = true, cardExists = true)
                 } else {
-                    _uiState.value = _uiState.value.copy(saving = false, error = "Kod Błędu: ${response.code()}")
+                    _uiState.value = _uiState.value.copy(saving = false, error = "Error code: ${response.code()}")
                 }
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
                     saving = false,
-                    error = "Błąd Połączenia: ${e.message ?: "Nieznany błąd"}"
+                    error = "Connection error: ${e.message ?: "Unknown error"}"
                 )
             }
         }
@@ -119,16 +123,17 @@ class MedicalCardViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     _uiState.value = _uiState.value.copy(deleting = false, deleted = true, cardExists = false)
                 } else {
-                    _uiState.value = _uiState.value.copy(deleting = false, error = "Kod Błędu: ${response.code()}")
+                    _uiState.value = _uiState.value.copy(deleting = false, error = "Error code: ${response.code()}")
                 }
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
                     deleting = false,
-                    error = "Błąd Połączenia: ${e.message ?: "Nieznany błąd"}"
+                    error = "Connection error: ${e.message ?: "Unknown error"}"
                 )
             }
         }
     }
+
     fun consumeResult() {
         _uiState.update { it.copy(saved = false, deleted = false) }
     }

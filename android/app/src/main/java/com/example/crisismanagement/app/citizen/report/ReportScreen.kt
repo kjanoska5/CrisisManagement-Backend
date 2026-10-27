@@ -1,4 +1,4 @@
-package com.example.crisismanagement.app.obywatel.zgloszenie
+package com.example.crisismanagement.app.citizen.report
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -40,93 +40,97 @@ import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ZgloszenieScreen(
-    uzytkownikId: String,
-    onZgloszeniaWyslano: () -> Unit,
-    viewModel: ZgloszenieViewModel = viewModel()
-){
-    val stan by viewModel.uiState.collectAsState()
+fun ReportScreen(
+    userId: String,
+    onReportSent: () -> Unit,
+    viewModel: ReportViewModel = viewModel()
+) {
+    val state by viewModel.uiState.collectAsState()
     val context = LocalContext.current
-    var zdjecieUri by remember { mutableStateOf<Uri?>(null) }
-    var rozwinietyDropdown by remember { mutableStateOf(false) }
-    var przyznanaLokalizacja by remember { mutableStateOf(false) }
-    var przyznanyAparat by remember { mutableStateOf(false) }
-    val launcherAparatu = rememberLauncherForActivityResult(
+    var imageUri by remember { mutableStateOf<Uri?>(null) }
+    var dropdownExpanded by remember { mutableStateOf(false) }
+    var locationGranted by remember { mutableStateOf(false) }
+    var cameraGranted by remember { mutableStateOf(false) }
+
+    val cameraLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.TakePicture()
-    ) { sukces ->
-        if (sukces && zdjecieUri != null) {
-            viewModel.ustawZdjecie(zdjecieUri.toString())
+    ) { success ->
+        if (success && imageUri != null) {
+            viewModel.setPhotoUri(imageUri.toString())
         }
     }
-    val launcherUprawnien = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()
-    ) { wyniki ->
-        przyznanyAparat = wyniki[Manifest.permission.CAMERA] == true
-        przyznanaLokalizacja =
-            wyniki[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
-                    wyniki[Manifest.permission.ACCESS_COARSE_LOCATION] == true
 
-        if (przyznanaLokalizacja) {
-            pobierzLokalizacje(
+    val permissionsLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { results ->
+        cameraGranted = results[Manifest.permission.CAMERA] == true
+        locationGranted = results[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
+                results[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+
+        if (locationGranted) {
+            getLocation(
                 context = context,
-                onSukces = { lat, lng -> viewModel.ustawLokalizacje(lat, lng) },
-                onBlad = {
-                    viewModel.ustawBlad(
-                        "Nie udało się pobrać lokalizacji. Sprawdź, czy lokalizacja jest włączona, i spróbuj ponownie."
+                onSuccess = { lat, lng -> viewModel.setLocation(lat, lng) },
+                onError = {
+                    viewModel.setError(
+                        "Failed to get location. Make sure location is turned on and try again."
                     )
                 }
             )
         } else {
-            viewModel.ustawBlad("Do zgłoszenia potrzebna jest zgoda na lokalizację.")
+            viewModel.setError("Location permission is required to send a report.")
         }
     }
 
     LaunchedEffect(Unit) {
-        val uprawnienia = buildList {
+        val permissions = buildList {
             add(Manifest.permission.CAMERA)
             add(Manifest.permission.ACCESS_FINE_LOCATION)
             add(Manifest.permission.ACCESS_COARSE_LOCATION)
             if (Build.VERSION.SDK_INT >= 37) add(Manifest.permission.ACCESS_LOCAL_NETWORK)
         }.toTypedArray()
-        launcherUprawnien.launch(uprawnienia)
+        permissionsLauncher.launch(permissions)
     }
-    LaunchedEffect(stan.wyslano) {
-        if (stan.wyslano){
-            onZgloszeniaWyslano()
+
+    LaunchedEffect(state.isSent) {
+        if (state.isSent) {
+            onReportSent()
         }
     }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(24.dp)
     ) {
-        Text("Zgłoś zdarzenie", style = MaterialTheme.typography.headlineSmall)
+        Text("Report an incident", style = MaterialTheme.typography.headlineSmall)
         Spacer(Modifier.height(16.dp))
-        if (!przyznanaLokalizacja) {
-            Text("Aplikacja potrzebuje dostępu do lokalizacji, żeby zgłosić zdarzenie.")
+        if (!locationGranted) {
+            Text("The app requires location access to report an incident.")
             Spacer(Modifier.height(16.dp))
         }
+
         ExposedDropdownMenuBox(
-            expanded = rozwinietyDropdown,
-            onExpandedChange = { rozwinietyDropdown = it}
+            expanded = dropdownExpanded,
+            onExpandedChange = { dropdownExpanded = it }
         ) {
             OutlinedTextField(
-                value = stan.wybranaKategoria?.name?: "Wybierz kategorię",
+                value = state.selectedCategory?.name ?: "Select category",
                 onValueChange = {},
                 readOnly = true,
-                label = {Text("Kategoria zagrożenia")},
+                label = { Text("Threat category") },
                 modifier = Modifier.menuAnchor().fillMaxWidth()
             )
             ExposedDropdownMenu(
-                expanded = rozwinietyDropdown,
-                onDismissRequest = {rozwinietyDropdown = false}
+                expanded = dropdownExpanded,
+                onDismissRequest = { dropdownExpanded = false }
             ) {
-                stan.listaKategorii.forEach { typ->
+                state.categoriesList.forEach { type ->
                     DropdownMenuItem(
-                        text = {Text(typ.name)},
+                        text = { Text(type.name) },
                         onClick = {
-                            viewModel.wybierzTyp(typ)
-                            rozwinietyDropdown = false
+                            viewModel.selectCategory(type)
+                            dropdownExpanded = false
                         }
                     )
                 }
@@ -134,67 +138,69 @@ fun ZgloszenieScreen(
         }
         Spacer(Modifier.height(16.dp))
         Text(
-            text = if (stan.szerokoscGeo != null && stan.dlugoscGeo != null)
-                "Lokalizacja: ${"%.5f".format(stan.szerokoscGeo)}, ${"%.5f".format(stan.dlugoscGeo)}"
-            else "Pobieranie lokalizacji..."
+            text = if (state.lat != null && state.lng != null)
+                "Location: ${"%.5f".format(state.lat)}, ${"%.5f".format(state.lng)}"
+            else "Fetching location..."
         )
         Spacer(Modifier.height(16.dp))
         Button(onClick = {
-            val uri = stworzUriNaZdjecie(context)
-            zdjecieUri = uri
-            launcherAparatu.launch(uri)
+            val uri = createImageUri(context)
+            imageUri = uri
+            cameraLauncher.launch(uri)
         }) {
-            Text(if (stan.zdjeciaUri!= null) "Zdjęcie dołączone ✓ (zmień)" else "Zrób zdjęcie")
+            Text(if (state.photoUri != null) "Photo attached ✓ (change)" else "Take photo")
         }
         Spacer(Modifier.height(16.dp))
         OutlinedTextField(
-            value = stan.komentarz,
-            onValueChange = { viewModel.ustawKomentarz(it) },
-            label = { Text("Komentarz (opcjonalnie)") },
+            value = state.comment,
+            onValueChange = { viewModel.setComment(it) },
+            label = { Text("Comment (optional)") },
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(Modifier.height(24.dp))
 
-        stan.komunikatBledu?.let {
+        state.errorMessage?.let {
             Text(it, color = MaterialTheme.colorScheme.error)
             Spacer(Modifier.height(8.dp))
         }
         Button(
-            onClick = { viewModel.wyslijZgloszenie(uzytkownikId) },
-            enabled = !stan.wysylanie,
+            onClick = { viewModel.sendReport(userId) },
+            enabled = !state.isSending,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(if (stan.wysylanie) "Wysyłanie..." else "Wyślij zgłoszenie")
+            Text(if (state.isSending) "Sending..." else "Send report")
         }
     }
 }
+
 @SuppressLint("MissingPermission")
-private fun pobierzLokalizacje(
+private fun getLocation(
     context: Context,
-    onSukces: (Double, Double) -> Unit,
-    onBlad: () -> Unit
+    onSuccess: (Double, Double) -> Unit,
+    onError: () -> Unit
 ) {
     val client = LocationServices.getFusedLocationProviderClient(context)
-    val zadanie = CurrentLocationRequest.Builder()
+    val request = CurrentLocationRequest.Builder()
         .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
         .setDurationMillis(15_000)
         .setMaxUpdateAgeMillis(10_000)
         .build()
 
-    client.getCurrentLocation(zadanie, null)
-        .addOnSuccessListener { lokalizacja ->
-            if (lokalizacja != null) {
-                onSukces(lokalizacja.latitude, lokalizacja.longitude)
+    client.getCurrentLocation(request, null)
+        .addOnSuccessListener { location ->
+            if (location != null) {
+                onSuccess(location.latitude, location.longitude)
             } else {
-                onBlad()
+                onError()
             }
         }
-        .addOnFailureListener { onBlad() }
+        .addOnFailureListener { onError() }
 }
-private fun stworzUriNaZdjecie(context: Context): Uri {
-    val plik = File(
+
+private fun createImageUri(context: Context): Uri {
+    val file = File(
         context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-        "zgloszenie_${System.currentTimeMillis()}.jpg"
+        "report_${System.currentTimeMillis()}.jpg"
     )
-    return FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", plik)
+    return FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
 }
