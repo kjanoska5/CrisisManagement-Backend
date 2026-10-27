@@ -1,4 +1,4 @@
-package com.example.crisismanagement.app.obywatel.medicalcard
+package com.example.crisismanagement.app.citizen.medicalcard
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,8 +22,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.crisismanagement.R
 import com.example.crisismanagement.app.common.components.AppTextField
 import com.example.crisismanagement.app.common.components.InfoCard
 import com.example.crisismanagement.app.common.components.PrimaryButton
@@ -63,38 +65,38 @@ fun MedicalCardScreen(
             .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
         AppTextField(
-            label = "Grupa krwi",
+            label = "Blood type",
             value = state.bloodType,
             onValueChange = { viewModel.setBloodType(it) },
-            placeholder = "Nie uzupełniono"
+            placeholder = "Not provided"
         )
         Spacer(Modifier.height(12.dp))
         AppTextField(
-            label = "Alergie",
+            label = "Allergies",
             value = state.allergies,
             onValueChange = { viewModel.setAllergies(it) },
-            placeholder = "Nie uzupełniono"
+            placeholder = "Not provided"
         )
         Spacer(Modifier.height(12.dp))
         AppTextField(
-            label = "Przyjmowane leki",
+            label = "Medications",
             value = state.medicines,
             onValueChange = { viewModel.setMedicines(it) },
-            placeholder = "Nie uzupełniono"
+            placeholder = "Not provided"
         )
         Spacer(Modifier.height(12.dp))
         AppTextField(
-            label = "Kontakt alarmowy",
+            label = "Emergency contact",
             value = state.emergencyContact,
             onValueChange = { viewModel.setEmergencyContact(it) },
-            placeholder = "Nie uzupełniono"
+            placeholder = "Not provided"
         )
         Spacer(Modifier.height(12.dp))
         AppTextField(
-            label = "Choroby przewlekłe",
+            label = "Chronic diseases",
             value = state.chronicDiseases,
             onValueChange = { viewModel.setChronicDiseases(it) },
-            placeholder = "Nie uzupełniono"
+            placeholder = "Not provided"
         )
         Spacer(Modifier.height(16.dp))
 
@@ -104,17 +106,17 @@ fun MedicalCardScreen(
         }
 
         PrimaryButton(
-            text = if (state.saving) "Zapisywanie..." else if (state.cardExists) "Zapisz kartę" else "Uzupełnij kartę",
+            text = if (state.saving) stringResource(R.string.common_saving) else if (state.cardExists) "Save card" else "Fill card",
             onClick = { viewModel.saveCard(userId) },
             enabled = !state.saving && !state.deleting
         )
         Spacer(Modifier.height(12.dp))
-        InfoCard("Uzupełniaj tylko potrzebne dane. Zdecyduj, co chcesz udostępnić służbom.")
+        InfoCard("Provide only necessary information. You decide what to share with emergency services.")
 
         if (state.cardExists) {
             Spacer(Modifier.height(16.dp))
             SecondaryButton(
-                text = if (state.deleting) "Usuwanie..." else "Usuń kartę",
+                text = if (state.deleting) "Deleting..." else "Delete card",
                 onClick = { showDeleteDialog = true },
                 enabled = !state.saving && !state.deleting,
                 isDanger = true
@@ -125,19 +127,19 @@ fun MedicalCardScreen(
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
-            title = { Text("Usunąć kartę medyczną?") },
-            text = { Text("Tej operacji nie można cofnąć.") },
+            title = { Text("Delete medical card?") },
+            text = { Text(stringResource(R.string.delete_confirm_message)) },
             confirmButton = {
                 TextButton(onClick = {
                     showDeleteDialog = false
                     viewModel.deleteCard(userId)
                 }) {
-                    Text("Usuń")
+                    Text(stringResource(R.string.common_delete))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDeleteDialog = false }) {
-                    Text("Anuluj")
+                    Text(stringResource(R.string.common_cancel))
                 }
             }
         )

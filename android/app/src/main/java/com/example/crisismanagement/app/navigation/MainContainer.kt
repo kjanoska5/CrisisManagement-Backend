@@ -16,20 +16,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.crisismanagement.R
+import com.example.crisismanagement.app.citizen.medicalcard.MedicalCardScreen
+import com.example.crisismanagement.app.citizen.report.ReportScreen
+import com.example.crisismanagement.app.citizen.report.ReportViewModel
+import com.example.crisismanagement.app.citizen.ui.CitizenHomeScreen
 import com.example.crisismanagement.app.common.components.ProfileScreen
 import com.example.crisismanagement.app.common.components.SettingsScreen
-import com.example.crisismanagement.app.enums.Rola
-import com.example.crisismanagement.app.obywatel.medicalcard.MedicalCardScreen
-import com.example.crisismanagement.app.obywatel.ui.ObywatelHomeScreen
-import com.example.crisismanagement.app.obywatel.zgloszenie.ZgloszenieScreen
-import com.example.crisismanagement.app.obywatel.zgloszenie.ZgloszenieViewModel
-import com.example.crisismanagement.app.sluzby.ui.SluzbyHomeScreen
+import com.example.crisismanagement.app.enums.Role
+import com.example.crisismanagement.app.services.ui.ServicesHomeScreen
 
 enum class ProfileSection { HOME, MEDICAL_CARD, SETTINGS }
 
 @Composable
 fun MainContainer(
-    role: Rola,
+    role: Role,
     userId: String,
     onLogout: () -> Unit
 ) {
@@ -46,7 +46,7 @@ fun MainContainer(
         }
     }
 
-    val isService = role == Rola.SLUZBY
+    val isService = role == Role.SERVICES
     val title = when (destination) {
         AppDestination.MAP -> stringResource(
             if (isService) R.string.title_service_map else R.string.title_map
@@ -83,24 +83,24 @@ fun MainContainer(
         Box(modifier = contentModifier) {
             when (destination) {
                 AppDestination.MAP -> when (role) {
-                    Rola.OBYWATEL -> ObywatelHomeScreen(
+                    Role.CITIZEN -> CitizenHomeScreen(
                         onNewReportClick = { destination = AppDestination.REPORTS }
                     )
-                    Rola.SLUZBY -> SluzbyHomeScreen(userId = userId)
+                    Role.SERVICES -> ServicesHomeScreen(userId = userId)
                 }
 
                 AppDestination.REPORTS -> when (role) {
-                    Rola.OBYWATEL -> ZgloszenieScreen(
-                        uzytkownikId = userId,
-                        onZgloszeniaWyslano = {
+                    Role.CITIZEN -> ReportScreen(
+                        userId = userId,
+                        onReportSent = {
                             reportFormSession++
                             destination = AppDestination.MAP
                         },
-                        viewModel = viewModel<ZgloszenieViewModel>(
+                        viewModel = viewModel<ReportViewModel>(
                             key = "report-form-$reportFormSession"
                         )
                     )
-                    Rola.SLUZBY -> PlaceholderScreen(title = title)
+                    Role.SERVICES -> PlaceholderScreen(title = title)
                 }
 
                 AppDestination.PROFILE -> when (profileSection) {

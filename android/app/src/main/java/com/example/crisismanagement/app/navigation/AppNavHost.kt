@@ -5,11 +5,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.crisismanagement.app.enums.Rola
+import com.example.crisismanagement.app.enums.Role
 import com.example.crisismanagement.app.login.LoginScreen
 
-// TODO: usunąć, gdy powstanie prawdziwa autoryzacja — na razie jedno miejsce do podmiany ID
-private const val TYMCZASOWY_UZYTKOWNIK_ID = "a4bab6f2-60fa-461a-b7b5-746b0e883896"
+// TODO: remove when real auth is added - single place for mock ID
+private const val TEMP_USER_ID = "a4bab6f2-60fa-461a-b7b5-746b0e883896"
 
 @Composable
 fun AppNavHost(
@@ -25,30 +25,30 @@ fun AppNavHost(
 
         composable(Route.Login.route) {
             LoginScreen(
-                onZalogowano = { rola ->
-                    val cel = when (rola) {
-                        Rola.OBYWATEL -> Route.ObywatelHome.route
-                        Rola.SLUZBY -> Route.SluzbyHome.route
+                onLoggedIn = { role ->
+                    val target = when (role) {
+                        Role.CITIZEN -> Route.CitizenHome.route
+                        Role.SERVICES -> Route.ServicesHome.route
                     }
-                    navController.navigate(cel) {
+                    navController.navigate(target) {
                         popUpTo(Route.Login.route) { inclusive = true }
                     }
                 }
             )
         }
 
-        composable(Route.ObywatelHome.route) {
+        composable(Route.CitizenHome.route) {
             MainContainer(
-                role = Rola.OBYWATEL,
-                userId = TYMCZASOWY_UZYTKOWNIK_ID,
+                role = Role.CITIZEN,
+                userId = TEMP_USER_ID,
                 onLogout = logout
             )
         }
 
-        composable(Route.SluzbyHome.route) {
+        composable(Route.ServicesHome.route) {
             MainContainer(
-                role = Rola.SLUZBY,
-                userId = TYMCZASOWY_UZYTKOWNIK_ID,
+                role = Role.SERVICES,
+                userId = TEMP_USER_ID,
                 onLogout = logout
             )
         }

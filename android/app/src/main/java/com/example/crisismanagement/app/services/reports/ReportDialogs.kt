@@ -1,4 +1,4 @@
-package com.example.crisismanagement.app.sluzby.reports
+package com.example.crisismanagement.app.services.reports
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

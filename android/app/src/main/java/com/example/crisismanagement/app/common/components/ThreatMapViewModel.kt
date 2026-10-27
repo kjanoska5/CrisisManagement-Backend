@@ -12,23 +12,23 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 data class MapUiState(
-    val reports : List<ReportSummary> = emptyList(),
-    val categories : Map<String, String> = emptyMap(),
-    val chosenReports : ReportSummary? = null,
-    val loading : Boolean = false,
-    val error : String? = null
+    val reports: List<ReportSummary> = emptyList(),
+    val categories: Map<String, String> = emptyMap(),
+    val chosenReport: ReportSummary? = null,
+    val loading: Boolean = false,
+    val error: String? = null
 )
 
-class MapaZagrozenViewModel: ViewModel() {
+class ThreatMapViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(MapUiState())
     val uiState: StateFlow<MapUiState> = _uiState.asStateFlow()
 
-    private fun startAutoRefreshing(){
+    private fun startAutoRefreshing() {
         viewModelScope.launch {
             while (isActive) {
                 try {
                     val result = RetrofitClient.api.getReports()
-                    val types = RetrofitClient.api.pobierzTypyZagrozen()
+                    val types = RetrofitClient.api.getThreatTypes()
                     val mapTypes = types.associate { it.id to it.name }
                     _uiState.value = _uiState.value.copy(reports = result, categories = mapTypes, error = null)
                 } catch (e: Exception) {
@@ -38,10 +38,12 @@ class MapaZagrozenViewModel: ViewModel() {
             }
         }
     }
+
     init {
         startAutoRefreshing()
     }
-    fun chooseReport(report: ReportSummary?){
-        _uiState.value = _uiState.value.copy(chosenReports = report)
+
+    fun chooseReport(report: ReportSummary?) {
+        _uiState.value = _uiState.value.copy(chosenReport = report)
     }
 }
