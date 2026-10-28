@@ -3,6 +3,7 @@ package com.example.crisismanagement.app.citizen.report
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.crisismanagement.app.common.network.NewReportRequest
+import com.example.crisismanagement.app.common.network.ReportsApi
 import com.example.crisismanagement.app.common.network.RetrofitClient
 import com.example.crisismanagement.app.common.network.ThreatType
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +24,9 @@ data class ReportUiState(
     val errorMessage: String? = null
 )
 
-class ReportViewModel : ViewModel() {
+class ReportViewModel(
+    private val api: ReportsApi = RetrofitClient.api
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ReportUiState())
     val uiState: StateFlow<ReportUiState> = _uiState.asStateFlow()
@@ -31,7 +34,7 @@ class ReportViewModel : ViewModel() {
     private fun fetchThreatTypes() {
         viewModelScope.launch {
             try {
-                val result = RetrofitClient.api.getThreatTypes()
+                val result = api.getThreatTypes()
                 _uiState.value = _uiState.value.copy(categoriesList = result)
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(errorMessage = e.message)
@@ -75,7 +78,7 @@ class ReportViewModel : ViewModel() {
         viewModelScope.launch {
             _uiState.value = state.copy(isSending = true, errorMessage = null)
             try {
-                RetrofitClient.api.sendReport(
+                api.sendReport(
                     NewReportRequest(
                         userId = userId,
                         threatTypeId = category.id,
