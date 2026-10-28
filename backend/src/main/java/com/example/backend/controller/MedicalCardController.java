@@ -5,6 +5,11 @@ import com.example.backend.dto.MedicalCardResponse;
 import com.example.backend.model.MedicalCard;
 import com.example.backend.model.User;
 import com.example.backend.repository.UserRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,9 +17,9 @@ import org.springframework.web.server.ResponseStatusException;
 import com.example.backend.repository.MedicalCardRepository;
 import java.util.UUID;
 
-// endpointy dla karty medycznej
 @RestController
 @RequestMapping("/api/users/{userId}/medical-card")
+@Tag(name = "Medical Card", description = "User medical card and emergency information management")
 public class MedicalCardController {
 
     private final UserRepository userRepository;
@@ -25,9 +30,14 @@ public class MedicalCardController {
         this.medicalCardRepository=medicalCardRepository;
     }
 
-    // pobieranie karty
     @GetMapping
-    public MedicalCardResponse getCard(@PathVariable UUID userId) {
+    @Operation(summary = "Get medical card", description = "Retrieves the medical card details for a specific user.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Medical card successfully retrieved"),
+            @ApiResponse(responseCode = "404", description = "User or medical card not found")
+    })
+    public MedicalCardResponse getCard(
+            @Parameter(description = "UUID of the user") @PathVariable UUID userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "user not found"));
 
@@ -39,16 +49,21 @@ public class MedicalCardController {
         return mapToResponse(card);
     }
 
-    // tworzenie lub nadpisywanie karty
     @PutMapping
-    public MedicalCardResponse updateCard(@PathVariable UUID userId, @RequestBody MedicalCardRequest request) {
+    @Operation(summary = "Create or update medical card", description = "Creates a new medical card or overwrites an existing one for the specified user.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Medical card successfully updated/created"),
+            @ApiResponse(responseCode = "404", description = "User not found")
+    })
+    public MedicalCardResponse updateCard(
+            @Parameter(description = "UUID of the user") @PathVariable UUID userId,
+            @RequestBody MedicalCardRequest request) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "user not found"));
 
         MedicalCard card = user.getMedicalCard();
         if (card == null) {
             card = new MedicalCard();
-            // polaczenie karty z uzytkownikiem
             card.setUser(user);
         }
 
@@ -63,8 +78,15 @@ public class MedicalCardController {
 
         return mapToResponse(card);
     }
+
     @DeleteMapping
-    public ResponseEntity<Void> deleteCard(@PathVariable UUID userId) {
+    @Operation(summary = "Delete medical card", description = "Removes the medical card associated with the specified user.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Medical card successfully deleted"),
+            @ApiResponse(responseCode = "404", description = "User or medical card not found")
+    })
+    public ResponseEntity<Void> deleteCard(
+            @Parameter(description = "UUID of the user") @PathVariable UUID userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "user not found"));
 
@@ -80,8 +102,6 @@ public class MedicalCardController {
         return ResponseEntity.noContent().build();
     }
 
-
-    // przepisywanie danych z encji do dto
     private MedicalCardResponse mapToResponse(MedicalCard card) {
         MedicalCardResponse response = new MedicalCardResponse();
         response.setId(card.getId());
