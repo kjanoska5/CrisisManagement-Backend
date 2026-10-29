@@ -34,5 +34,7 @@
     <string name="profile_placeholder">Dane konta pojawią się po wdrożeniu logowania</string>
     <string name="settings_theme">Motyw aplikacji</string>
     <string name="settings_language">Język aplikacji</string>
-    <string name="settings_coming_soon">Wybór motywu i języka pojawi się w kolejnych wersjach aplikacji.</string>
+    <string name="theme_system">Systemowy</string>
+    <string name="theme_light">Jasny</string>
+    <string name="theme_dark">Ciemny</string>
 </resources>
