@@ -145,3 +145,15 @@ Następnie wykonaj Sync i uruchom aplikację ponownie.
 **Znane ograniczenie:** serwer działa przez HTTP (bez szyfrowania). Ruch jest
 dozwolony tylko dla wskazanych adresów w `network_security_config.xml`.
 HTTPS jest planowany w późniejszym sprincie.
+
+## Logowanie przez Google (Android): konfiguracja
+
+1. Poproś o **Web Client ID** (klient OAuth typu "Web application" w projekcie Google Cloud). To ten sam identyfikator, który backend ma w zmiennej środowiskowej `GOOGLE_CLIENT_ID`. Nie commitujemy go do repozytorium.
+2. Dopisz go w `android/local.properties`:
+   `GOOGLE_WEB_CLIENT_ID=<id>.apps.googleusercontent.com`
+   Aplikacja czyta go przez `BuildConfig.GOOGLE_WEB_CLIENT_ID` (klasa `GoogleAuthConfig`).
+3. **Odcisk SHA-1 na nowym komputerze:**
+   - w folderze `android` uruchom `.\gradlew signingReport` i skopiuj `SHA1` z wariantu `debug`,
+   - w Google Cloud Console (APIs & Services → Credentials) utwórz klienta OAuth typu **Android** z pakietem `com.example.crisismanagementapp` i tym odciskiem (każdy komputer ma własny klucz debug, więc każdy potrzebuje osobnego klienta; wymaga to uprawnień w projekcie),
+   - dla wersji release używamy osobnego klienta z odciskiem klucza release.
+4. Emulator musi mieć obraz z **Google Play** i zalogowane konto Google, które jest na liście Test users na ekranie zgody OAuth.
