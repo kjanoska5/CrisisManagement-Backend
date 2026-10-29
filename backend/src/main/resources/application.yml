@@ -24,6 +24,8 @@ server:
 app:
   security:
     encryption-key: ${ENCRYPTION_KEY:1234567890123456}
+  google:
+    client-id: ${GOOGLE_CLIENT_ID:635433495142-rl0p82541bu56ehuktmvhfutfupqtkai.apps.googleusercontent.com}
 
 springdoc:
   swagger-ui:
