@@ -40,7 +40,7 @@ android {
             buildConfigField("String", "BASE_URL", "\"$debugUrl\"")
         }
         release {
-            buildConfigField("String", "BASE_URL", "\"http://9.205.17.123:8080/\"")
+            buildConfigField("String", "BASE_URL", "\"https://crisis-backend.denmarkeast.cloudapp.azure.com/\"")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
