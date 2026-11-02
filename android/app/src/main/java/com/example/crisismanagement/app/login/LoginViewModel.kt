@@ -50,8 +50,6 @@ class LoginViewModel(
             try {
                 val response = authApi.loginWithGoogle(GoogleLoginRequest(idToken))
                 val role = response.role.toAppRole()
-                //do usuniecia pozniej
-                Log.d("LoginViewModel", "Logged in as userId=${response.userId} role=${response.role}")
                 if (role == null) {
                     Log.w("LoginViewModel", "Unknown role from server: '${response.role}'")
                     showError(LoginError.UNKNOWN_ROLE)

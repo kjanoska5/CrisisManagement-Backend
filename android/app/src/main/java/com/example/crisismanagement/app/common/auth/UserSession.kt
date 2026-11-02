@@ -13,7 +13,7 @@ data class UserSession(
 )
 
 fun String.toAppRole(): Role? = when (trim().uppercase()) {
-    "OBYWATEL", "CITIZEN" -> Role.CITIZEN
-    "SLUZBY", "SERVICE", "SERVICES" -> Role.SERVICES
+    "CITIZEN" -> Role.CITIZEN
+    "SERVICES" -> Role.SERVICES
     else -> null
 }
