@@ -56,4 +56,41 @@
     <string name="profile_account_google">Konto Google</string>
     <string name="profile_account_test">Konto testowe</string>
     <string name="profile_test_user">Użytkownik testowy</string>
+    <!-- Login: e-mail + hasło -->
+    <string name="login_email_label">Adres e-mail</string>
+    <string name="login_email_placeholder">nazwa@example.com</string>
+    <string name="login_password_label">Hasło</string>
+    <string name="login_submit">Zaloguj się</string>
+    <string name="login_or">lub</string>
+    <string name="login_no_account">Nie masz konta?</string>
+    <string name="login_register_link">Zarejestruj się</string>
+    <string name="login_error_invalid_credentials">Nieprawidłowy e-mail lub hasło. Jeśli konto zakładałeś przez Google, użyj przycisku „Zaloguj przez Google”.</string>
+
+    <!-- Walidacja pól -->
+    <string name="error_field_empty">To pole jest wymagane</string>
+    <string name="error_email_invalid">Podaj poprawny adres e-mail</string>
+    <string name="error_password_short">Hasło musi mieć co najmniej 8 znaków</string>
+    <string name="error_passwords_differ">Hasła nie są takie same</string>
+    <string name="error_name_incomplete">Podaj imię i nazwisko</string>
+
+    <!-- Rejestracja -->
+    <string name="register_title">Rejestracja</string>
+    <string name="register_heading">Utwórz konto</string>
+    <string name="register_subtitle">Wypełnij dane, aby dołączyć do systemu ostrzegania Crisis Management.</string>
+    <string name="register_name_label">Imię i nazwisko</string>
+    <string name="register_name_placeholder">Wpisz imię i nazwisko</string>
+    <string name="register_password_repeat_label">Powtórz hasło</string>
+    <string name="register_role_label">Typ konta</string>
+    <string name="register_role_citizen">Obywatel</string>
+    <string name="register_role_services">Służby</string>
+    <string name="register_services_note">Konta służb mają wymagać weryfikacji uprawnień (w prototypie nie jest ona jeszcze wdrożona).</string>
+    <string name="register_submit">Utwórz konto</string>
+    <string name="register_submitting">Tworzenie konta…</string>
+    <string name="register_have_account">Masz już konto?</string>
+    <string name="register_login_link">Zaloguj się</string>
+    <string name="register_error_email_taken">Konto z tym adresem e-mail już istnieje.</string>
+    <string name="register_error_invalid_input">Serwer odrzucił dane. Sprawdź formularz i spróbuj ponownie.</string>
+
+    <!-- Profil -->
+    <string name="profile_account_local">Konto lokalne</string>
 </resources>
