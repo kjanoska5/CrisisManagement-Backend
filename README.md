@@ -142,6 +142,17 @@ API_BASE_URL=https://crisis-backend.denmarkeast.cloudapp.azure.com/
 
 Następnie wykonaj Sync i uruchom aplikację ponownie.
 
+---
+
+## Autoryzacja i Użytkownicy (Sprint 2)
+
+* Rejestracja tradycyjna (`/api/auth/register`) tworzy użytkownika z `auth_provider = LOCAL`.
+* Logowanie Google (`/api/auth/google`) tworzy lub uwierzytelnia użytkownika z `auth_provider = GOOGLE` (brak lokalnego hasła).
+* API zwraca role `CITIZEN` oraz `SERVICES`. Nadawanie roli `SERVICES` podczas otwartej rejestracji jest świadomym uproszczeniem na potrzeby prototypu.
+* Obie metody uwierzytelniania zwracają ten sam format odpowiedzi (`AuthResponse`: `userId` oraz `role`). 
+* Na etapie Sprintu 2 API nie wydaje tokenów JWT — autoryzacja endpointów i nagłówki Bearer są planowane na Sprint 3.
+
+---
 
 ## Logowanie przez Google (Android): konfiguracja
 
