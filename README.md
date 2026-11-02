@@ -1,167 +1,59 @@
-##  Mobilny System Teleinformatyczny do Zarządzania Kryzysowego
-
-> **Praca Inżynierska**
-> **Uczelnia:** Politechnika Łódzka
-> **Promotor:** dr inż. Paweł Marciniak
-> **Autorzy:** Kacper Janoska (backend / serwer) & Marcel Podlecki (aplikacja mobilna / klient)
-
+Backend Architecture for Crisis Management System
+> **Projekt Inżynierski (Część Serwerowa)**
+> **Autor:** Kacper Janoska (Backend Developer & Cloud Infrastructure)
+> **Pełny projekt zrealizowano w zespole dwuosobowym:** Aplikacja kliencka (Android/Kotlin) znajduje się w osobnym repozytorium.
 ---
-
-##  O projekcie
-
-System służy do natychmiastowego przekazywania informacji o zagrożeniach, koordynacji działań w sytuacjach kryzysowych oraz sprawny przepływ informacji pomiędzy obywatelami a służbami ratunkowymi.
-
-Aplikacja składa się z dwóch głównych modułów: **modułu dla obywatela** oraz **modułu dla służb** — oba zrealizowane w ramach jednej natywnej aplikacji Android, rozróżniane rolą użytkownika (uzasadnienie wyboru: [ADR-0001](docs/adr/0001-wybor-stosu-technologicznego.md)).
-
-Aktualny, bieżący postęp prac śledzony jest na bieżąco w zakładkach **Issues** i **Milestones** tego repozytorium.
-
+O projekcie
+Niniejsze repozytorium zawiera architekturę serwerową oraz bazodanową systemu do zarządzania kryzysowego. System służy do natychmiastowego przekazywania informacji o zagrożeniach, przetwarzania danych geoprzestrzennych oraz sprawnego przepływu informacji pomiędzy obywatelami a służbami ratunkowymi w czasie rzeczywistym.
 ---
-
-##  Makieta
-
-https://www.figma.com/design/arjRIcCKMXEpYhwgz7Xjv1/Crisis-Management---Makieta?node-id=8-2&t=E7XJvaYB4f4fLV5l-1
-Ścieżka do makiety w repozytorium docs/
-
+Kluczowe Funkcjonalności API
+Przetwarzanie danych geoprzestrzennych (PostGIS): Zapis i odczyt lokalizacji GPS dla zgłoszeń, optymalizacja zapytań przestrzennych dla mapy zagrożeń.
+Zarządzanie zgłoszeniami: Endpointy RESTful obsługujące pełny cykl życia zdarzenia (od zgłoszenia po weryfikację i rozwiązanie przez służby).
+Szyfrowanie danych wrażliwych (AES/GCM): Kryptograficzne zabezpieczenie po stronie bazy danych pól takich jak profil zdrowotny, grupa krwi, alergie czy przyjmowane leki (Karta Medyczna).
+Autoryzacja (Sprint 2):
+Rejestracja i logowanie tradycyjne (lokalne) z wykorzystaniem hashowania haseł BCrypt.
+Uwierzytelnianie Google OAuth2 poprzez weryfikację `idToken`.
+Rozróżnianie ról (CITIZEN / SERVICES).
+Interfejs Dyspozytora: Interaktywna dokumentacja Swagger UI pełniąca funkcję panelu operacyjnego dla służb.
 ---
-
-##  Funkcjonalności
-
-###  Moduł Obywatela (Android App)
-**Zrealizowane:**
--  **Zgłaszanie zdarzeń:** zdjęcie, automatycznie pobrana lokalizacja GPS, wybór kategorii zagrożenia z listy, opcjonalny komentarz
--  **Interaktywna mapa zagrożeń:** pinezki kolorowane wg statusu (czerwony — aktywne, żółty — weryfikowane, zielony — rozwiązane), szczegóły zgłoszenia po kliknięciu, automatyczne odświeżanie w czasie zbliżonym do rzeczywistego
--  **Karta medyczna:** utworzenie, edycja i usunięcie profilu zdrowotnego (grupa krwi, alergie, przyjmowane leki, choroby przewlekłe, kontakt alarmowy); dane wrażliwe szyfrowane po stronie backendu
-
-**Planowane:**
--  **Szybkie wezwanie pomocy (SOS):** przytrzymanie przycisku wysyła lokalizację GPS wraz z zapisaną kartą medyczną
--  **Alerty kryzysowe:** powiadomienia push wybudzające telefon, z sygnałem dźwiękowym i pop-upem
--  **Nawigacja do punktu zbiórki:** najkrótsza trasa do bezpiecznej strefy ewakuacyjnej po alercie
--  **Tryb offline:** lokalny zapis zgłoszeń przy braku zasięgu i automatyczna synchronizacja po odzyskaniu połączenia
--  **Poradniki offline:** instrukcje pierwszej pomocy i postępowania w sytuacjach kryzysowych, dostępne bez internetu
--  **Tryb oszczędzania zasobów:** przesyłanie wyłącznie priorytetowych danych (tekst + GPS) bez zdjęć
-
-###  Moduł dla Służb & Algorytmy Serwerowe
-**Zrealizowane:**
--  **Mapa zagrożeń** — ten sam, współdzielony komponent co w module obywatela
-**Planowane:**
--  **Nanoszenie i weryfikacja zagrożeń:** zarządzanie statusem zgłoszenia (endpoint na backendzie już gotowy, interfejs w aplikacji w trakcie realizacji)
--  **System wiarygodności zgłoszeń:** automatyczne podnoszenie priorytetu przy wielu niezależnych zgłoszeniach tego samego zdarzenia w niewielkim promieniu
--  **Śledzenie jednostek ratunkowych:** pozycje służb widoczne na mapie obywatela
-
-> Logowanie obecnie rozróżnia jedynie rolę (obywatel / służby) jako mechanizm tymczasowy — pełna autoryzacja użytkowników jest zaplanowana jako osobny etap prac.
-
+Stos Technologiczny
+Język i Framework: Java 17, Spring Boot, Maven
+Baza Danych: PostgreSQL + rozszerzenie PostGIS
+Zabezpieczenia: Spring Security (BCrypt), Google API Client (OAuth2)
+Infrastruktura i Wdrożenie: Docker, Docker Compose, maszyna wirtualna Microsoft Azure, reverse proxy Caddy (certyfikaty Let's Encrypt TLS)
+Dokumentacja API: OpenAPI 3.0 / Swagger UI
 ---
-
-##  Stos Technologiczny
-
-**Zrealizowane:**
-- **Aplikacja Mobilna:** Kotlin, Jetpack Compose, Google Maps SDK, Retrofit
-- **Backend:** Java, Spring Boot, Maven
-- **Baza Danych:** PostgreSQL + PostGIS (obliczenia geoprzestrzenne), uruchamiana przez Docker
-- **Bezpieczeństwo:** AES/GCM — szyfrowanie pól wrażliwych karty medycznej na poziomie bazy danych
-
-**Planowane:**
-- **Powiadomienia:** Firebase Cloud Messaging (FCM)
-- **Dane offline:** lokalna baza Room po stronie aplikacji Android
-
-Pełne uzasadnienie wyboru technologii: [docs/adr/0001-wybor-stosu-technologicznego.md](docs/adr/0001-wybor-stosu-technologicznego.md)
-
----
-
-##  Uruchomienie projektu
-
-### Wymagania wstępne
-- Docker Desktop
-- JDK 17+
-- Android Studio (najnowsza stabilna wersja) + Android SDK
-- Klucz API do Google Maps SDK for Android (Google Cloud Console)
-
-### 1. Baza danych
-W głównym katalogu repozytorium:
+Uruchomienie projektu (Środowisko Lokalne)
+Wymagania wstępne
+Docker Desktop
+JDK 17+
+1. Baza danych (Docker)
+W głównym katalogu repozytorium znajduje się plik konfiguracyjny. Uruchom kontener poleceniem:
 ```bash
 docker compose up -d
 ```
-Uruchamia PostgreSQL z rozszerzeniem PostGIS na porcie `5432` (konfiguracja: `docker-compose.yml`). W razie konfliktu portu na danym komputerze, port można nadpisać lokalnie zmienną środowiskową `DB_PORT`, bez modyfikowania pliku współdzielonego w repozytorium.
-
-### 2. Backend
+Uruchamia to silnik PostgreSQL z rozszerzeniem PostGIS na porcie `5432`.
+2. Serwer Spring Boot
 ```bash
 cd backend
 ./mvnw spring-boot:run
 ```
-Backend startuje na porcie `8080` i łączy się z bazą z kroku 1. Przy pierwszym uruchomieniu automatycznie wstawiane są dane testowe (przykładowy użytkownik i kategorie zagrożeń).
-
-Zmienna środowiskowa `ENCRYPTION_KEY` (szyfrowanie karty medycznej) ma ustawioną bezpieczną wartość domyślną wyłącznie do developmentu (`application.yml`) — do nadpisania na docelowym środowisku.
-
-### 3. Aplikacja Android
-1. Otwórz katalog `android/` w Android Studio.
-2. W pliku `android/local.properties` dodaj:
-   ```
-   MAPS_API_KEY=twój_klucz_api
-   ```
-3. Zsynchronizuj Gradle i uruchom na emulatorze lub urządzeniu fizycznym.
-
-> Backend (krok 2) musi działać lokalnie, żeby aplikacja mogła się z nim komunikować. Na emulatorze Androida adres `10.0.2.2` wskazuje na `localhost` komputera-hosta — to oczekiwane zachowanie, nie błąd konfiguracji.
-
-### 4. Interfejs Dyspozytora (Swagger UI)
-System udostępnia interaktywną dokumentację API (Swagger UI), która pełni funkcję panelu dla dyspozytorów. Pozwala na przeglądanie zgłoszeń i zmianę ich statusu bezpośrednio z poziomu przeglądarki na serwerze produkcyjnym.
-
-1. Otwórz w przeglądarce panel dyspozytora: `https://crisis-backend.denmarkeast.cloudapp.azure.com/swagger-ui.html`
-2. Aby pobrać ID konkretnego zgłoszenia, rozwiń sekcję `GET /api/reports` i kliknij **Try it out** -> **Execute**.
-3. Aby zmienić status zgłoszenia, rozwiń `PATCH /api/reports/{id}/status` i kliknij **Try it out**.
-4. Wklej ID zgłoszenia, wybierz z listy nowy status (np. `IN_PROGRESS`, `VERIFIED`, `RESOLVED`) i kliknij **Execute**. 
-
-Zmiana natychmiast zaktualizuje rekord w chmurowej bazie danych na serwerze Azure, a nowy status (wraz z odpowiednim kolorem pinezki) zaktualizuje się automatycznie u wszystkich użytkowników aplikacji mobilnej.
-
+Backend startuje na porcie `8080` i automatycznie łączy się z bazą danych z kroku 1. Przy pierwszym uruchomieniu mechanizm Hibernate/Flyway (w zależności od konfiguracji) przygotuje struktury tabel.
+> **Uwaga dot. bezpieczeństwa:** Zmienna środowiskowa `ENCRYPTION_KEY` (szyfrowanie karty medycznej) ma ustawioną testową wartość w `application.yml` wyłącznie na potrzeby lokalnego developmentu. W środowisku produkcyjnym Azure jest ona nadpisywana.
+3. Panel Dyspozytora / Dokumentacja API (Swagger UI)
+System udostępnia automatycznie generowaną dokumentację, z poziomu której można testować autoryzację oraz zarządzać zgłoszeniami:
+Lokalnie: `http://localhost:8080/swagger-ui.html`
+Produkcyjnie (Azure): `https://crisis-backend.denmarkeast.cloudapp.azure.com/swagger-ui.html`
+Aby przetestować zmianę statusu zgłoszenia:
+Pobierz ID zgłoszenia (`GET /api/reports`).
+Użyj endpointu `PATCH /api/reports/{id}/status`.
+Wklej ID, ustaw status na np. `IN_PROGRESS` i wykonaj zapytanie.
 ---
-
-##  Struktura Repozytorium
+Struktura Repozytorium
 ```text
-crisis-management-system/
-├── android/                 # Kod źródłowy aplikacji mobilnej (Kotlin, Jetpack Compose)
-├── backend/                 # Kod źródłowy serwera i API (Spring Boot)
-├── docs/                    # Dokumentacja projektowa
-│   ├── adr/                  # Decyzje architektoniczne (Architecture Decision Records)
-│   ├── architecture.md       # Diagram komponentów i kluczowych przepływów danych
-│   └── database-schema.md    # Schemat bazy danych (ERD)
-├── docker-compose.yml       # Konfiguracja lokalnej bazy danych i chmurowego środowiska (Caddy)
-└── Caddyfile                # Konfiguracja serwera Caddy (HTTPS i Reverse Proxy) dla Azure
+CrisisManagement-Backend/
+├── backend/                 # Kod źródłowy aplikacji Spring Boot
+├── docs/                    # Dokumentacja projektowa i decyzje architektoniczne
+├── docker-compose.yml       # Konfiguracja środowiskowa bazy danych
+└── Caddyfile                # Reguły reverse proxy (HTTPS) dla wdrożenia Azure
 ```
-
-Przełączanie środowiska (Android)
-Adres API jest konfigurowany przez buildConfigField w android/app/build.gradle.kts:
-
-| Wariant | Adres | Użycie |
-|---|---|---|
-| debug | `http://10.0.2.2:8080/` (emulator + lokalny backend) | codzienny development |
-| release | `https://crisis-backend.denmarkeast.cloudapp.azure.com/` (serwer Azure, Let's Encrypt TLS) | wersja dla prowadzących |
-
-Aby w wariancie debug połączyć się z serwerem produkcyjnym (np. z Azure z telefonu), dopisz w android/local.properties (plik nie jest w repozytorium):
-
-API_BASE_URL=https://crisis-backend.denmarkeast.cloudapp.azure.com/
-
-
-Następnie wykonaj Sync i uruchom aplikację ponownie.
-
----
-
-## Autoryzacja i Użytkownicy (Sprint 2)
-
-* Rejestracja tradycyjna (`/api/auth/register`) tworzy użytkownika z `auth_provider = LOCAL`.
-* Logowanie Google (`/api/auth/google`) tworzy lub uwierzytelnia użytkownika z `auth_provider = GOOGLE` (brak lokalnego hasła).
-* API zwraca role `CITIZEN` oraz `SERVICES`. Nadawanie roli `SERVICES` podczas otwartej rejestracji jest świadomym uproszczeniem na potrzeby prototypu.
-* Obie metody uwierzytelniania zwracają ten sam format odpowiedzi (`AuthResponse`: `userId` oraz `role`). 
-* Na etapie Sprintu 2 API nie wydaje tokenów JWT — autoryzacja endpointów i nagłówki Bearer są planowane na Sprint 3.
-
----
-
-## Logowanie przez Google (Android): konfiguracja
-
-1. Poproś o **Web Client ID** (klient OAuth typu "Web application" w projekcie Google Cloud). To ten sam identyfikator, który backend ma w zmiennej środowiskowej `GOOGLE_CLIENT_ID`. Nie commitujemy go do repozytorium.
-2. Dopisz go w `android/local.properties`:
-   `GOOGLE_WEB_CLIENT_ID=<id>.apps.googleusercontent.com`
-   Aplikacja czyta go przez `BuildConfig.GOOGLE_WEB_CLIENT_ID` (klasa `GoogleAuthConfig`).
-3. **Odcisk SHA-1 na nowym komputerze:**
-   - w folderze `android` uruchom `.\gradlew signingReport` i skopiuj `SHA1` z wariantu `debug`,
-   - w Google Cloud Console (APIs & Services → Credentials) utwórz klienta OAuth typu **Android** z pakietem `com.example.crisismanagementapp` i tym odciskiem (każdy komputer ma własny klucz debug, więc każdy potrzebuje osobnego klienta; wymaga to uprawnień w projekcie),
-   - dla wersji release używamy osobnego klienta z odciskiem klucza release.
-4. Emulator musi mieć obraz z **Google Play** i zalogowane konto Google, które jest na liście Test users na ekranie zgody OAuth.
