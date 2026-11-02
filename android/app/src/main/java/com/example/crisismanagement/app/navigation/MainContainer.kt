@@ -20,6 +20,7 @@ import com.example.crisismanagement.app.citizen.medicalcard.MedicalCardScreen
 import com.example.crisismanagement.app.citizen.report.ReportScreen
 import com.example.crisismanagement.app.citizen.report.ReportViewModel
 import com.example.crisismanagement.app.citizen.ui.CitizenHomeScreen
+import com.example.crisismanagement.app.common.auth.UserSession
 import com.example.crisismanagement.app.common.components.ProfileScreen
 import com.example.crisismanagement.app.common.components.SettingsScreen
 import com.example.crisismanagement.app.enums.Role
@@ -29,13 +30,13 @@ enum class ProfileSection { HOME, MEDICAL_CARD, SETTINGS }
 
 @Composable
 fun MainContainer(
-    role: Role,
-    userId: String,
+    session: UserSession,
     onLogout: () -> Unit
 ) {
+    val role = session.role
+    val userId = session.userId
     var destination by rememberSaveable { mutableStateOf(AppDestination.MAP) }
     var profileSection by rememberSaveable { mutableStateOf(ProfileSection.HOME) }
-    // New key = fresh form state (otherwise the "sent" flag would survive between visits)
     var reportFormSession by rememberSaveable { mutableIntStateOf(0) }
 
     BackHandler(enabled = destination != AppDestination.MAP) {
@@ -105,7 +106,7 @@ fun MainContainer(
 
                 AppDestination.PROFILE -> when (profileSection) {
                     ProfileSection.HOME -> ProfileScreen(
-                        role = role,
+                        session = session,
                         onOpenMedicalCard = { profileSection = ProfileSection.MEDICAL_CARD },
                         onOpenSettings = { profileSection = ProfileSection.SETTINGS },
                         onLogout = onLogout

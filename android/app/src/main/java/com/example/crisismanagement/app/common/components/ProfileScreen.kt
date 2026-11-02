@@ -26,18 +26,28 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.crisismanagement.R
+import com.example.crisismanagement.app.common.auth.UserSession
 import com.example.crisismanagement.app.enums.Role
 import com.example.crisismanagement.ui.theme.extendedColors
 
 @Composable
 fun ProfileScreen(
-    role: Role,
+    session: UserSession,
     onOpenMedicalCard: () -> Unit,
     onLogout: () -> Unit,
     onOpenSettings: () -> Unit = {}
 ) {
+    val roleLabel = stringResource(
+        if (session.role == Role.SERVICES) R.string.profile_role_service
+        else R.string.profile_role_citizen
+    )
+    val accountLabel = stringResource(
+        if (session.signedInWithGoogle) R.string.profile_account_google
+        else R.string.profile_account_test
+    )
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -63,16 +73,24 @@ fun ProfileScreen(
                 Spacer(Modifier.width(12.dp))
                 Column {
                     Text(
-                        text = stringResource(
-                            if (role == Role.SERVICES) R.string.profile_role_service
-                            else R.string.profile_role_citizen
-                        ),
-                        style = MaterialTheme.typography.titleMedium
+                        text = session.displayName ?: stringResource(R.string.profile_test_user),
+                        style = MaterialTheme.typography.titleMedium,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
+                    session.email?.let { email ->
+                        Text(
+                            text = email,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.extendedColors.textMuted,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
                     Text(
-                        text = stringResource(R.string.profile_placeholder),
+                        text = "$roleLabel · $accountLabel",
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.extendedColors.textMuted
+                        color = MaterialTheme.colorScheme.primary
                     )
                 }
             }
@@ -80,7 +98,7 @@ fun ProfileScreen(
 
         AppCard(modifier = Modifier.fillMaxWidth()) {
             Column {
-                if (role == Role.CITIZEN) {
+                if (session.role == Role.CITIZEN) {
                     ProfileRow(stringResource(R.string.title_medical_card), onOpenMedicalCard)
                     HorizontalDivider(color = MaterialTheme.colorScheme.outline)
                 }
