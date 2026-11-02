@@ -45,9 +45,13 @@ fun ProfileScreen(
         else R.string.profile_role_citizen
     )
     val accountLabel = stringResource(
-        if (session.signedInWithGoogle) R.string.profile_account_google
-        else R.string.profile_account_test
+        when {
+            session.signedInWithGoogle -> R.string.profile_account_google
+            session.email != null -> R.string.profile_account_local
+            else -> R.string.profile_account_test
+        }
     )
+    val title = session.displayName ?: session.email ?: stringResource(R.string.profile_test_user)
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -73,12 +77,12 @@ fun ProfileScreen(
                 Spacer(Modifier.width(12.dp))
                 Column {
                     Text(
-                        text = session.displayName ?: stringResource(R.string.profile_test_user),
+                        text = title,
                         style = MaterialTheme.typography.titleMedium,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
-                    session.email?.let { email ->
+                    session.email?.takeIf { it != title }?.let { email ->
                         Text(
                             text = email,
                             style = MaterialTheme.typography.bodySmall,

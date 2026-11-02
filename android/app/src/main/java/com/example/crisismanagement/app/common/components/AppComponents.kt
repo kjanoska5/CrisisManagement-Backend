@@ -52,7 +52,8 @@ fun AppTextField(
     placeholder: String? = null,
     minLines: Int = 1,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    visualTransformation: VisualTransformation = VisualTransformation.None
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    errorText: String? = null
 ) {
     val colors = MaterialTheme.colorScheme
     Column(modifier = modifier) {
@@ -71,6 +72,8 @@ fun AppTextField(
             minLines = minLines,
             keyboardOptions = keyboardOptions,
             visualTransformation = visualTransformation,
+            isError = errorText != null,
+            supportingText = errorText?.let { { Text(it) } },
             shape = MaterialTheme.shapes.medium,
             colors = OutlinedTextFieldDefaults.colors(
                 focusedContainerColor = colors.surface,
@@ -81,7 +84,12 @@ fun AppTextField(
                 unfocusedTextColor = colors.onSurface,
                 cursorColor = colors.primary,
                 focusedPlaceholderColor = MaterialTheme.extendedColors.textMuted,
-                unfocusedPlaceholderColor = MaterialTheme.extendedColors.textMuted
+                unfocusedPlaceholderColor = MaterialTheme.extendedColors.textMuted,
+                errorContainerColor = colors.surface,
+                errorBorderColor = MaterialTheme.extendedColors.danger,
+                errorTextColor = colors.onSurface,
+                errorCursorColor = MaterialTheme.extendedColors.danger,
+                errorSupportingTextColor = MaterialTheme.extendedColors.danger
             )
         )
     }

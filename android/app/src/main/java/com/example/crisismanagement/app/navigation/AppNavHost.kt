@@ -11,8 +11,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.crisismanagement.app.common.auth.SessionManager
+import com.example.crisismanagement.app.common.auth.UserSession
 import com.example.crisismanagement.app.enums.Role
 import com.example.crisismanagement.app.login.LoginScreen
+import com.example.crisismanagement.app.login.RegisterScreen
 
 @Composable
 fun AppNavHost(
@@ -31,17 +33,27 @@ fun AppNavHost(
         }
     }
 
+    val onAuthenticated: (UserSession) -> Unit = { newSession ->
+        sessionManager.save(newSession)
+        session = newSession
+        navController.navigate(newSession.role.homeRoute()) {
+            popUpTo(Route.Login.route) { inclusive = true }
+        }
+    }
+
     NavHost(navController = navController, startDestination = startRoute) {
 
         composable(Route.Login.route) {
             LoginScreen(
-                onLoggedIn = { newSession ->
-                    sessionManager.save(newSession)
-                    session = newSession
-                    navController.navigate(newSession.role.homeRoute()) {
-                        popUpTo(Route.Login.route) { inclusive = true }
-                    }
-                }
+                onLoggedIn = onAuthenticated,
+                onOpenRegister = { navController.navigate(Route.Register.route) }
+            )
+        }
+
+        composable(Route.Register.route) {
+            RegisterScreen(
+                onRegistered = onAuthenticated,
+                onBackToLogin = { navController.popBackStack() }
             )
         }
 
